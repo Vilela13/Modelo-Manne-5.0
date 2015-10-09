@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
 
 				if( Instancia->LeDados(Nome, EscreveDadosLidosNaTela) == 1){
 
-					resolveu = Instancia->Cplex(Nome, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes, PlantasComAtrazo, ValorAtrazoPlantas,  Gap, Tempo, 1);
+					resolveu = Instancia->Cplex(Nome, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes, PlantasComAtrazo, ValorAtrazoPlantas,  Gap, Tempo);
 					cout  << " Resolveu = " << resolveu << endl << endl ;
 
 					ArquivoExcelResposta = fopen(Saida.c_str(), "a");

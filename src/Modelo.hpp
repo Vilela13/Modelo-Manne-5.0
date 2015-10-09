@@ -223,7 +223,7 @@ public:
 
 // Funções que chama o Cplex
 
-    int Cplex(string, int&, double&, double&, double&, int&, int&, double&, int&, double&s, double&, double&, int);
+    int Cplex(string, int&, double&, double&, double&, int&, int&, double&, int&, double&s, double&, double&);
 
 // Escrever em diretorio a saída
 
@@ -1289,6 +1289,9 @@ void No::FuncaoObjetivo(TipoZe Ze, TipoZr Zr, TipoRoAEe RoAEe, TipoRoPEe RoPEe, 
 			Ativo = 1;
 		}
 	}
+	if ( Imprime == 1){
+		cout << endl;
+	}
 	IloObjective obj = IloMinimize(env, funcao_objetivo);
 	model.add(obj);
 	funcao_objetivo.end();
@@ -2221,7 +2224,7 @@ void No::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int EscreveArquiv
 }
 
 // Resolve modelo
-int No::Cplex(string Nome, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo, int PermiteFolga){
+int No::Cplex(string Nome, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo){
 
 	int Escreve;				// Escreve variaveis criadas
 
@@ -2360,7 +2363,7 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 
 // Modelo
 	IloCplex cplex(model);
-	cplex.exportModel("model.lp");
+	//cplex.exportModel("model.lp");
 
 // Cria pasta OUT
 	VerificaOuCriaPastaOut(EscreveNaTelaResultados);
