@@ -2378,7 +2378,7 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 	if(SaidaPastaSeparada == 1){
 		cplex.setOut(logfile1);
 	}
-	//cplex.setParam(IloCplex::TiLim, 7200);
+	cplex.setParam(IloCplex::TiLim, 7200);
 	cplex.setParam(IloCplex::Threads, 4);
 
 	Tempo1 = cplex.getCplexTime();
