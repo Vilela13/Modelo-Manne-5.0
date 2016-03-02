@@ -104,14 +104,29 @@ public:
 };
 
 DadosSaloman::DadosSaloman(){
-	AuxiliarInt = 13;
-	Capacidade  = 13;
-	NumeroNosDadosSaloman = 13;
-	NumeroVeiculos = 13;
-	x = 13;
-	y = 13;
+
+	NumeroVERSAO = 0;
+	CaminhaoAux = 0;
+
+	AuxiliarInt = 0;
+	Capacidade  = 0;
+	NumeroNosDadosSaloman = 0;
+	NumeroVeiculos = 0;
+	x = 0;
+	y = 0;
+	NumeroPlantas 	= 0;
+	NumeroClientes 	= 0;
+	NumeroCaminhoes = 0;
+	Velocidade 		= 0;
+
+	TempoDeDescarga		= 0;
+	TemproEntreEntregas	= 0;
+	TempoPlanta			= 0;
+	TempoDeVidaConcreto	= 0;
+	TempoEntreEntregas	= 0;
 
 }
+
 
 void DadosSaloman::CarregarNumeroNosCoordenadas( string Nome){
 
@@ -156,14 +171,14 @@ void DadosSaloman::CarregarNumeroNosCoordenadas( string Nome){
 	NumeroDoNo.resize( NumeroNosDadosSaloman + 1 );
 
 	Coordenadas.resize( NumeroNosDadosSaloman + 1 );
-    for( int i = 0; i <= NumeroNosDadosSaloman + 1; i++){
+    for( int i = 0; i <= NumeroNosDadosSaloman ; i++){
             Coordenadas[i].resize(2);
 
     }
     Demanda.resize( NumeroNosDadosSaloman + 1 );
 
     JanelaDeTempo.resize( NumeroNosDadosSaloman + 1 );
-    for( int i = 0; i <= NumeroNosDadosSaloman + 1; i++){
+    for( int i = 0; i <= NumeroNosDadosSaloman; i++){
     	JanelaDeTempo[i].resize(2);
 
 	}
@@ -180,8 +195,6 @@ void DadosSaloman::CarregarNumeroNosCoordenadas( string Nome){
     if( EscreveDadosLidos == 1){
     	cout << endl;
     }
-
-
 
     for( int i = 0; i <= NumeroNosDadosSaloman; i++){
         Instancia >> NumeroDoNo[i];
@@ -205,8 +218,6 @@ void DadosSaloman::CarregarNumeroNosCoordenadas( string Nome){
             cout << JanelaDeTempo[i][1] << "\t\t\t";
             cout << TempoDeServico[i] << "\t\t" << endl;
         }
-
-
     }
 
     //cout << endl << endl << " DadosSaloman " << endl << endl;
@@ -249,14 +260,17 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	PosicaoTextoY = 2;
 	TamanhoLetraLegenda = 2;
 
-
-
 	string TipoComando;
 	string NomeArquivoComandoR;
 
 	TipoComando = "./ComR/CmdR-";
 	TipoComando += Nome;
 
+	bool EscreveNoZero;
+	bool EscreveDemadnas;
+
+	EscreveNoZero = 0;
+	EscreveDemadnas = 0;
 
 
 	if(!opendir ("ComR")){
@@ -269,7 +283,6 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 		}
 
 		/* Outra maneira de criar arquivos
-
 		SituacaoDiretorio = mkdir("./myfolder", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		*/
 
@@ -290,9 +303,22 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	ComandosR << "require(ggplot2) "<< endl;
 
 	ComandosR << "Dados <- data.frame(nomes = c(" ;
-	ComandosR << "\"N" << "0" << "\"";
+	if( EscreveNoZero == 1 ){
+		ComandosR << "\"N" << "0" << "\"";
+	}
 	for( int c = 1; c <= NumeroClientes; c++){
-		ComandosR << "," << "\"C" <<  c << "(" <<  NumeroCarretas[c] << ")"<<  "\"";
+		if( c == 1){
+			if( EscreveNoZero == 1 ){
+				ComandosR << ",";
+			}
+		}else{
+			ComandosR << ",";
+		}
+		ComandosR << "\"C" <<  c;
+		if(EscreveDemadnas == 1){
+			ComandosR << "(" <<  NumeroCarretas[c] << ")";
+		}
+		ComandosR <<  "\"";
 	}
 	for( int p = 1; p <= NumeroPlantas; p++){
 		ComandosR << ","<< "\"P" <<  p <<  "\"";
@@ -302,9 +328,18 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	//cout << " Aqui 1 " << endl;
 
 	ComandosR << ", x <- c(" ;
-	ComandosR << Coordenadas[0][0] ;
+	if( EscreveNoZero == 1 ){
+		ComandosR << Coordenadas[0][0] ;
+	}
 	for( int c = 1; c <= NumeroClientes; c++){
-		ComandosR << ","<<  Coordenadas[	NoCliente[c] ][0] ;
+		if( c == 1){
+			if( EscreveNoZero == 1 ){
+				ComandosR << ",";
+			}
+		}else{
+			ComandosR << ",";
+		}
+		ComandosR <<  Coordenadas[	NoCliente[c] ][0] ;
 	}
 	for( int p = 1; p <= NumeroPlantas; p++){
 		ComandosR << ","<<  Coordenadas[ NoPlanta[p] ][0] ;
@@ -312,9 +347,18 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	ComandosR << ")" << endl;
 
 	ComandosR << ", y <- c(" ;
-	ComandosR << Coordenadas[0][1] ;
+	if( EscreveNoZero == 1 ){
+		ComandosR << Coordenadas[0][1] ;
+	}
 	for( int c = 1; c <= NumeroClientes; c++){
-		ComandosR << ","<<  Coordenadas[	NoCliente[c] ][1] ;
+		if( c == 1){
+			if( EscreveNoZero == 1 ){
+				ComandosR << ",";
+			}
+		}else{
+			ComandosR << ",";
+		}
+		ComandosR <<  Coordenadas[	NoCliente[c] ][1] ;
 	}
 	for( int p = 1; p <= NumeroPlantas; p++){
 		ComandosR << ","<<  Coordenadas[ NoPlanta[p] ][1] ;
@@ -322,9 +366,18 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	ComandosR << ")" << endl;
 
 	ComandosR << ", tipo <- c(" ;
-	ComandosR << "3" ;
+	if( EscreveNoZero == 1 ){
+		ComandosR << "5" ;
+	}
 	for( int c = 1; c <= NumeroClientes; c++){
-			ComandosR << ",6" ;
+		if( c == 1){
+			if( EscreveNoZero == 1 ){
+				ComandosR << ",";
+			}
+		}else{
+			ComandosR << ",";
+		}
+		ComandosR << "2" ;
 	}
 	for( int p = 1; p <= NumeroPlantas; p++){
 			ComandosR << ",4" ;
@@ -332,9 +385,18 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	ComandosR << ")" << endl;
 
 	ComandosR << ", tamanho <- c(" ;
-	ComandosR << "1" ;
+	if( EscreveNoZero == 1 ){
+		ComandosR << "1" ;
+	}
 	for( int c = 1; c <= NumeroClientes; c++){
-			ComandosR << ",1" ;
+		if( c == 1){
+			if( EscreveNoZero == 1 ){
+				ComandosR << ",";
+			}
+		}else{
+			ComandosR << ",";
+		}
+		ComandosR << "1" ;
 	}
 	for( int p = 1; p <= NumeroPlantas; p++){
 		ComandosR << ",2" ;
@@ -1175,9 +1237,26 @@ void DadosSaloman::CriarInstanciaSaloman(string Nome){
 }
 
 DadosSaloman::~DadosSaloman(){
-    for( int i = 0; i <= NumeroNosDadosSaloman; i++){
-        Coordenadas[i].clear();
-    }
-    Coordenadas.clear();
+	NomeInstancia.clear();
+	Auxiliar.clear();
+	NumeroDoNo.clear();
+	Coordenadas.clear();
+	Demanda.clear();
+	JanelaDeTempo.clear();
+	TempoDeServico.clear();
+
+	NoPlanta.clear();
+	NoCliente.clear();
+	CaminhoArquivo1.clear();
+	CaminhoArquivo2.clear();
+	TXT.clear();
+	CaminhoesPlanta.clear();
+	NumeroCarretas.clear();
+	HoraInicioPlanta.clear();
+	HoraFinalPlanta.clear();
+
+	HoraInicioCliente.clear();
+	HoraFinalCliente.clear();
 }
+
 #endif /* DADOSSALOMAN_HPP_ */

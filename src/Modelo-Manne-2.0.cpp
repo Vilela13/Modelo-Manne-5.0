@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
 			cout << " entrei 3 - escreve comandos excel" << endl;
 			InstanciaSaloman->EscreverComandosExcel(Nome);					// Não implementado ainda
 			cout << " sai 3 - escreve comandos excel" << endl;
-			free(InstanciaSaloman);
+			delete(InstanciaSaloman);
 
 
 
@@ -195,7 +195,7 @@ int main(int argc, char **argv) {
 				}
 				//cout << endl << " Antes do free " << Nome <<  endl;
 
-				free(Instancia);
+				delete(Instancia);
 				//cout << endl << " Depois do free "  << Nome << endl;
 			}
 

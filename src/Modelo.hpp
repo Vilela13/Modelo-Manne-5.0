@@ -55,7 +55,7 @@ class No{
 
 public:
     No();                                       // construtora da classe
-
+/*
  // Escreve arquivo TXT
 
     int NumPlantas;						// Número de plantas
@@ -90,7 +90,7 @@ public:
 
     void PreencheEstrutura();
     void CriaTXT();
-
+*/
 //	Funções de leitura do arquivo
     void LeNomeInstancia(int, string&);
     void LeNumeroPlantasEntregasVeiculos(int);
@@ -241,40 +241,32 @@ public:
 };
 
 No::No(){
-	NumPlantas = -13;
-	NumEntregas = -13;
-	NumVeiculos  = -13;
-	NP  = -13;
-	NE  = -13;
-	NV  = -13;
-	V = -13;
-	TVC = -13;
-	Velocidade  = -13;
-	TempoDeVidaConcreto = -13;
+	NP  = 0;
+	NE  = 0;
+	NV  = 0;
+	V = 0;
+	TVC = 0;
 	c1 = NULL;
 	c2 = NULL;
 	Tempo1 = -13;
 	Tempo2 = -13;
 }
 
+/*
 void No::PreencheEstrutura(){
-
-/* Coloca o numero de plantas, entregas, veiculos e velocidade */
-	NumPlantas = NumeroDePlantasVariaveisFixas;
+// Coloca o numero de plantas, entregas, veiculos e velocidade
+	NumPlantas 	= NumeroDePlantasVariaveisFixas;
 	NumEntregas = NumeroDeEntregasVariaveisFixas;
 	NumVeiculos = NumeroDeVeiculosVariaveisFixas;
-	Velocidade = VelocidadeVariaveisFixas;
+	Velocidade 	= VelocidadeVariaveisFixas;
 	TempoDeVidaConcreto = TempoDeVidaConcretoVariaveisFixas;
-
-/* Preenche o numero veiculos por planta  */
+// Preenche o numero veiculos por planta
 	TamanhoConjuntoVeiculoPlanta.resize( NumPlantas );
-	TamanhoConjuntoVeiculoPlanta[0]=3;
-	TamanhoConjuntoVeiculoPlanta[1]=2;
-
+	TamanhoConjuntoVeiculoPlanta[0]	=	3;
+	TamanhoConjuntoVeiculoPlanta[1]	=	2;
 	ConjuntoVeiculoPlanta.resize( NumPlantas );
 	ConjuntoVeiculoPlanta[0].resize( TamanhoConjuntoVeiculoPlanta[0] );
 	ConjuntoVeiculoPlanta[1].resize( TamanhoConjuntoVeiculoPlanta[1] );
-
 	int aux1;
 	int aux2;
 	aux1 = 0;
@@ -287,14 +279,12 @@ void No::PreencheEstrutura(){
 		ConjuntoVeiculoPlanta[aux2][aux1] = i+1;
 		aux1 = aux1 + 1;
 	}
-
-/* Preenche o numero de demandas por entrada  */
+// Preenche o numero de demandas por entrada
 	TamanhoConjuntoDemandasEntrada.resize(NumEntregas);
 	TamanhoConjuntoDemandasEntrada[0] = 2;
 	TamanhoConjuntoDemandasEntrada[1] = 1;
 	TamanhoConjuntoDemandasEntrada[2] = 3;
 	TamanhoConjuntoDemandasEntrada[3] = 2;
-
 	ConjuntoDemandasEntrada.resize(NumEntregas);
 	for( int i = 0; i < NumEntregas ; i++){
 		ConjuntoDemandasEntrada[i].resize( TamanhoConjuntoDemandasEntrada[i] );
@@ -302,24 +292,20 @@ void No::PreencheEstrutura(){
 			ConjuntoDemandasEntrada[i][j] = j + 1;
 		}
 	}
-
-/* Preenche as localizações das plantas e entradas  */
+// Preenche as localizações das plantas e entradas
 	Localizacao.resize( NumPlantas + NumEntregas);
 	for( int i = 0 ; i < NumPlantas + NumEntregas ; i++){
 		Localizacao[i].resize( 2);
 	}
-
-	/* Localização plantas (x,Y)*/
+	// Localização plantas (x,Y)
 	Localizacao[0][0]= -7;	Localizacao[0][1]= 1; // planta 1
 	Localizacao[1][0]= -2;	Localizacao[1][1]= 1; // planta 2
-
-	/* Localização entradas (x,Y)*/
+	// Localização entradas (x,Y)
 	Localizacao[2][0]= -9;	Localizacao[2][1]= 9; //Entrada 1
 	Localizacao[3][0]= -9;	Localizacao[3][1]= -5;//Entrada 2
 	Localizacao[4][0]= -4;	Localizacao[4][1]= 6; //Entrada 3
 	Localizacao[5][0]= 0;	Localizacao[5][1]= -5;//Entrada 4
-
-/* Distâncias das Plantas para as Entradas */
+// Distâncias das Plantas para as Entradas /
 	DistanciaPlantaEntrega.resize( NumPlantas);
 	for( int i = 0; i <  NumPlantas; i++){
 		DistanciaPlantaEntrega[i].resize( NumEntregas);
@@ -329,20 +315,17 @@ void No::PreencheEstrutura(){
 	    	DistanciaPlantaEntrega[i][j-NumPlantas] = sqrt( pow( Localizacao[i][0] - Localizacao[j][0],2) + pow( Localizacao[i][1] - Localizacao[j][1],2) ) / Velocidade;
 	   	}
 	}
-
-/* Distâncias das Entradas para as Plantas */
+// Distâncias das Entradas para as Plantas
 	DistanciaEntregaPlanta.resize( NumEntregas);
 		for( int i = 0; i <  NumEntregas; i++){
 			DistanciaEntregaPlanta[i].resize( NumPlantas);
 		}
-
 	for( int i = NumPlantas; i <  (NumPlantas + NumEntregas); i++){
 		for( int j = 0; j <  NumPlantas; j++){
 			DistanciaEntregaPlanta[i-NumPlantas][j] = sqrt( pow( Localizacao[i][0] - Localizacao[j][0],2) + pow( Localizacao[i][1] - Localizacao[j][1],2) ) / Velocidade;
 		}
 	}
-
-/* Tempo para descarregamento de cada veiculo */
+// Tempo para descarregamento de cada veiculo
 	TempoParaDescarregamento.resize( NumVeiculos);
 	for( int i = 0; i <  NumVeiculos; i++){
 		TempoParaDescarregamento[i].resize( NumEntregas);
@@ -353,20 +336,17 @@ void No::PreencheEstrutura(){
 			}
 		}
 	}
-
-/* Tempo na planta para carregamento */
+// Tempo na planta para carregamento
 	TempoNaPlanta.resize( NumPlantas);
 	for( int p = 0; p < NumPlantas; p++){
 		TempoNaPlanta[p] = 0.083333333; // equivalente a 5 minutos(4 min = 0.066667 ; 3min = 0.05 e 2min = 0.0333333)
 	}
-
-/* Tempo entre chegadas */
+// Tempo entre chegadas
 	TempoEntreChegadas.resize(NumEntregas);
 	for( int j = 0; j <  NumEntregas; j++){
 		TempoEntreChegadas[j] = 0.3;
 	}
-
-/*  Tempo inicio e termino Entrada */
+//  Tempo inicio e termino Entrada
 	 TempoInicioEntrada.resize(NumEntregas);
 	 for( int i = 0; i <  NumEntregas; i++){
 		 TempoInicioEntrada[i] = 8;
@@ -375,8 +355,7 @@ void No::PreencheEstrutura(){
 	 for( int i = 0; i <  NumEntregas; i++){
 		TempoFinalEntrada[i] = 16;
 	 }
-
- /*  Tempo inicio e termino Planta */
+ //  Tempo inicio e termino Planta
 	 TempoInicioPlanta.resize(NumPlantas);
 	 for( int i = 0; i <  NumPlantas; i++){
 		 TempoInicioPlanta[i] = 8;
@@ -385,36 +364,27 @@ void No::PreencheEstrutura(){
 	 for( int i = 0; i <  NumPlantas; i++){
 		TempoFinalPlanta[i] = 16;
 	 }
-
 }
 void No::CriaTXT(){
-
 	ofstream Instancia;
 	Instancia.open("./InstS/T-M-V1.txt");
-
 cout << "T-M-V1" << endl;
 	Instancia <<"T-M-V1" << endl;
-
 cout << " Numero de Plantas " << endl << '\t';
     cout << NumPlantas << endl;
     Instancia << NumPlantas << endl;
-
 cout << " Numero de Entregas " << endl << '\t';
     cout << NumEntregas << endl;
     Instancia << NumEntregas << endl;
-
 cout << " Numero de Veículos " << endl << '\t';
     cout << NumVeiculos <<  endl;
     Instancia << NumVeiculos  << endl;
-
 cout << " Velocidade " << endl << '\t';
 	cout << Velocidade <<  endl;
     Instancia << Velocidade  << endl;
-
 cout << " Tempo de Vida do Concreto " << endl << '\t';
 	cout << TempoDeVidaConcreto <<  endl;
 	Instancia << TempoDeVidaConcreto  << endl;
-
 cout << "Conjunto de Veiculos por Planta " << endl;
     for( int i = 0; i <  NumPlantas; i++){
     	cout << '\t' << "Planta " << i + 1 <<  " ( " << TamanhoConjuntoVeiculoPlanta[i] << " ) -> ";
@@ -426,7 +396,6 @@ cout << "Conjunto de Veiculos por Planta " << endl;
     	cout << endl;
     	Instancia << endl;
 	}
-
 cout << "Conjunto de Demandas por Entrega " << endl;
 	for( int i = 0; i <  NumEntregas; i++){
 		cout << '\t' << "Entrega " << i + 1 <<  " ( " << TamanhoConjuntoDemandasEntrada[i] << " ) -> ";
@@ -438,7 +407,6 @@ cout << "Conjunto de Demandas por Entrega " << endl;
 		cout << endl;
 		Instancia << endl;
 	}
-
 cout << "Distancia Planta - Entrega " << endl;
 	cout << ' ';
 	for( int j = 0; j <  NumEntregas; j++){
@@ -454,7 +422,6 @@ cout << "Distancia Planta - Entrega " << endl;
 		cout << endl;
 		Instancia << endl;
 	}
-
 cout << "Distancia Entrega - Planta " << endl;
 	cout << ' ';
 	for( int j = 0; j <  NumPlantas; j++){
@@ -470,7 +437,6 @@ cout << "Distancia Entrega - Planta " << endl;
 		cout << endl;
 		Instancia << endl;
 	}
-
 cout << "Tempo Para Descarregamento " << endl;
 	for( int i = 0; i <  NumVeiculos; i++){
 	cout << '\t' << '\t' << "Veiculo " << i+1 << endl;
@@ -486,7 +452,6 @@ cout << "Tempo Para Descarregamento " << endl;
 			Instancia << endl;
 		}
 	}
-
 cout << "Tempo Para Carregamento " << endl;
 	for( int p = 0; p < NumPlantas; p++){
 		Instancia <<  TempoNaPlanta[p] << '\t';
@@ -494,7 +459,6 @@ cout << "Tempo Para Carregamento " << endl;
 	}
 	cout << endl;
 	Instancia << endl;
-
 cout << " Tempo entre chagadas " << endl;
 	for( int j = 0; j <  NumEntregas; j++){
 		cout << TempoEntreChegadas[j] << '\t';
@@ -502,7 +466,6 @@ cout << " Tempo entre chagadas " << endl;
 	}
 	cout << endl;
 	Instancia << endl;
-
 cout << " Tempo Inicio Entrada " << endl;
 	 for( int i = 0; i <  NumEntregas; i++){
 		cout << i << ' ' << TempoInicioEntrada[i]<< endl;
@@ -510,7 +473,6 @@ cout << " Tempo Inicio Entrada " << endl;
 	 }
 	 cout << endl;
 	 Instancia << endl;
-
 cout << " Tempo Final Entrada " << endl;
 	 for( int i = 0; i <  NumEntregas; i++){
 		cout << i << ' ' << TempoFinalEntrada[i]<< endl;
@@ -518,7 +480,6 @@ cout << " Tempo Final Entrada " << endl;
 	 }
 	 cout << endl;
 	 Instancia << endl;
-
 cout << " Tempo Inicio Planta " << endl;
 	 for( int i = 0; i <  NumPlantas; i++){
 		 cout << i << ' ' << TempoInicioPlanta[i] << endl;
@@ -526,7 +487,6 @@ cout << " Tempo Inicio Planta " << endl;
 	 }
 	 cout << endl;
 	 Instancia << endl;
-
 cout << " Tempo Final Planta " << endl;
 	 for( int i = 0; i <  NumPlantas; i++){
 		 cout << i << ' ' << TempoFinalPlanta[i] << endl;
@@ -534,9 +494,9 @@ cout << " Tempo Final Planta " << endl;
 	 }
 	 cout << endl;
 	 Instancia << endl;
-
 	 Instancia.close();
 }
+*/
 
 // Le dadso da Intância
 void No::LeNomeInstancia(int comentarios, string& Instancia){
@@ -545,6 +505,7 @@ void No::LeNomeInstancia(int comentarios, string& Instancia){
 		cout << " Nome instancia "<<  Instancia << endl;
 	}
 }
+
 void No::LeNumeroPlantasEntregasVeiculos(int comentarios){
 	arq >> NP;
 	arq >> NE;
@@ -555,6 +516,7 @@ void No::LeNumeroPlantasEntregasVeiculos(int comentarios){
 		cout << " Numero de Veiculos "<< NV << endl;
 	}
 }
+
 void No::LeVelocidadeTempoVidaConcreto(int comentarios){
 	arq >> V;
 	arq >> TVC;
@@ -563,6 +525,7 @@ void No::LeVelocidadeTempoVidaConcreto(int comentarios){
 		cout << " TVC (tempo de vida do concreto) "<< TVC << endl;
 	}
 }
+
 void No::LeVeiculoPorPlanta(int comentarios){
 	if( comentarios == 1){
 		cout << "Conjunto de Veiculos por Planta " << endl;
@@ -589,6 +552,7 @@ void No::LeVeiculoPorPlanta(int comentarios){
 		cout << endl;
 	}
 }
+
 void No::LeDemandasPorEntrada(int comentarios){
 	if( comentarios == 1){
 		cout << "Conjunto de Demandas por Entrega " << endl;
@@ -615,6 +579,7 @@ void No::LeDemandasPorEntrada(int comentarios){
 		cout << endl;
 	}
 }
+
 void No::LeDistanciaPlantaEntrada(int comentarios){
 	Dpe.resize(NP);
 	for(int p = 0; p < NP; p++){
@@ -644,6 +609,7 @@ void No::LeDistanciaPlantaEntrada(int comentarios){
 		}
 	}
 }
+
 void No::LeDistanciaEntregaPlanta(int comentarios){
 	Dep.resize(NE);
 	for(int e = 0; e < NE; e++){
@@ -673,6 +639,7 @@ void No::LeDistanciaEntregaPlanta(int comentarios){
 		}
 	}
 }
+
 void No::LeTempoProcessamentoEntrega(int comentarios){
 	int Aux1;
 
@@ -710,6 +677,7 @@ void No::LeTempoProcessamentoEntrega(int comentarios){
 		}
 	}
 }
+
 void No::LeTempoCarregamentoPlanta(int comentarios){
 	TPp.resize(NP );
 	if( comentarios == 1){
@@ -725,6 +693,7 @@ void No::LeTempoCarregamentoPlanta(int comentarios){
 		cout << endl;
 	}
 }
+
 void No::LeTempoMaximoEntreEntregasConsecultivas(int comentarios){
 	Omega.resize(NE);
 	if( comentarios == 1){
@@ -1016,6 +985,7 @@ void No::CriaAlfa(TipoAlfa& Alfa, int Escreve){
 		}
 	}
 }
+
 void No::CriaBeta(TipoBeta& Beta, int Escreve ){
 	char varName[24];
 	for (int v = 0; v < NV; v++) {
@@ -1049,6 +1019,7 @@ void No::CriaBeta(TipoBeta& Beta, int Escreve ){
 		}
 	}
 }
+
 void No::CriaBetaProducao(TipoBeta& BetaProducao, int Escreve ){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
@@ -1082,6 +1053,7 @@ void No::CriaBetaProducao(TipoBeta& BetaProducao, int Escreve ){
 		}
 	}
 }
+
 void No::CriaTvei( TipoTvei& Tvei,int Escreve){
 	char varName[24];
 	for (int v = 0; v < NV; v++) {
@@ -1104,6 +1076,7 @@ void No::CriaTvei( TipoTvei& Tvei,int Escreve){
 		cout << endl;
 	}
 }
+
 void No::CriaTPvei( TipoTPvei& TPvei,int Escreve){
 	char varName[24];
 	for (int v = 0; v < NV; v++) {
@@ -1124,6 +1097,7 @@ void No::CriaTPvei( TipoTPvei& TPvei,int Escreve){
 		cout << endl;
 	}
 }
+
 void No::CriaZe(TipoZe& Ze , int Escreve){
 	char varName[24];
 	for (int e = 0; e < NE; e++) {
@@ -1137,6 +1111,7 @@ void No::CriaZe(TipoZe& Ze , int Escreve){
 		cout << endl;
 	}
 }
+
 void No::CriaZr(TipoZr& Zr , int Escreve ){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
@@ -1165,6 +1140,7 @@ void No::CriaAEe(TipoAEe& AEe, int  Escreve){
 	}
 
 }
+
 void No::CriaPEe(TipoPEe& PEe, int  Escreve){
 	char varName[24];
 	for (int e = 0; e < NE; e++) {
@@ -1178,6 +1154,7 @@ void No::CriaPEe(TipoPEe& PEe, int  Escreve){
 		cout << endl;
 	}
 }
+
 void No::CriaAPp(TipoAPp& APp, int Escreve){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
@@ -1191,6 +1168,7 @@ void No::CriaAPp(TipoAPp& APp, int Escreve){
 		cout << endl;
 	}
 }
+
 void No::CriaPPp(TipoPPp& PPp, int Escreve){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
@@ -1219,6 +1197,7 @@ void No::CriaRoAEe(TipoRoAEe	RoAEe,int Escreve){
 	}
 
 }
+
 void No::CriaRoPEe(TipoRoPEe	RoPEe,int Escreve){
 	char varName[24];
 	for (int e = 0; e < NE; e++) {
@@ -1232,6 +1211,7 @@ void No::CriaRoPEe(TipoRoPEe	RoPEe,int Escreve){
 		cout << endl;
 	}
 }
+
 void No::CriaRoAPp(TipoRoAPp	RoAPp,int Escreve){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
@@ -1245,6 +1225,7 @@ void No::CriaRoAPp(TipoRoAPp	RoAPp,int Escreve){
 		cout << endl;
 	}
 }
+
 void No::CriaRoPPp(TipoRoPPp	RoPPp,int Escreve){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
@@ -2362,7 +2343,9 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 
 
 // Modelo
-	IloCplex cplex(model);
+	IloCplex *cplex;
+
+	cplex = new IloCplex(model);
 	//cplex.exportModel("model.lp");
 
 // Cria pasta OUT
@@ -2376,12 +2359,12 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 	ofstream logfile1(Nome1.c_str());
 
 	if(SaidaPastaSeparada == 1){
-		cplex.setOut(logfile1);
+		cplex->setOut(logfile1);
 	}
-	cplex.setParam(IloCplex::TiLim, 7200);
-	cplex.setParam(IloCplex::Threads, 4);
+	cplex->setParam(IloCplex::TiLim, 60);
+	cplex->setParam(IloCplex::Threads, 6);
 
-	Tempo1 = cplex.getCplexTime();
+	Tempo1 = cplex->getCplexTime();
 
 	//cout << endl << " setou tempo" << endl << endl;
 	primal = -1;
@@ -2395,15 +2378,17 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 	gap = -1;
 
 // Resolve o modelo.
-	if (!cplex.solve()) {
+	if (!cplex->solve()) {
 		cerr << "Failed to optimize LP." << endl;
-		status = cplex.getStatus();
+		status = cplex->getStatus();
 		cout << " status = (" << status << ")" << endl;
-		tempo = cplex.getCplexTime() - Tempo1;
+		tempo = cplex->getCplexTime() - Tempo1;
 		logfile1.close();
 		//throw(-1);                                                   // Olhar!!!!!!!!!!!!!!!!!!
 
-		model.end();
+		//model.end();				// problema, trava o programa. olhar! falam que demora muito. que é melhor deletar o objeto IloClpex
+
+		delete(cplex);
 
 		Alfa.clear();
 		Beta.clear();
@@ -2430,7 +2415,7 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 
 		//cout << endl << " rodou " << endl << endl;
 
-		Tempo2 = cplex.getCplexTime();
+		Tempo2 = cplex->getCplexTime();
 
 		VerificaOuCriaPastaSol(EscreveNaTelaResultados);
 
@@ -2441,19 +2426,19 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 
 		ofstream logfile2(Nome2.c_str());
 
-		status = cplex.getStatus();
-		primal = cplex.getObjValue();
-		dual = cplex.getBestObjValue();
-		if( cplex.getStatus() == 1 || cplex.getStatus() == 2 || cplex.getStatus() == 4 ){
-			CalculaFuncaoObjetivo(cplex, Ze,  Zr, SolucaoReal);
-			CalculaEntregasComAtrazo(cplex, AEe, RoAEe, PEe, RoPEe, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes);
-			CalculaPlantasComAtrazo( cplex, APp, RoAPp, PPp, RoPPp, PlantasComAtrazo, ValorAtrazoPlantas);
+		status = cplex->getStatus();
+		primal = cplex->getObjValue();
+		dual = cplex->getBestObjValue();
+		if( cplex->getStatus() == 1 || cplex->getStatus() == 2 || cplex->getStatus() == 4 ){
+			CalculaFuncaoObjetivo(		*cplex, Ze,  Zr, 	SolucaoReal);
+			CalculaEntregasComAtrazo(	*cplex, AEe, RoAEe, PEe, RoPEe, ConstrucoesComAtrazo, 	DemandasAfetadas, ValorAtrazoConstrucoes);
+			CalculaPlantasComAtrazo( 	*cplex, APp, RoAPp, PPp, RoPPp, PlantasComAtrazo, 		ValorAtrazoPlantas);
 		}
-		gap =  100 * ( cplex.getObjValue() - cplex.getBestObjValue() ) / cplex.getObjValue();
+		gap =  100 * ( cplex->getObjValue() - cplex->getBestObjValue() ) / cplex->getObjValue();
 		tempo = Tempo2 - Tempo1;
 
 		if( EscreveNaTelaResultados == 1){
-			cout << "Solution status = " << status << " [" << cplex.getStatus() << "] "<< endl;
+			cout << "Solution status = " << status << " [" << cplex->getStatus() << "] "<< endl;
 			cout << "Solution primal cost = " << primal << endl;
 			cout << "Solution dual cost = " << dual << endl ;
 			cout << "Soution with delay = " << SolucaoReal << endl;
@@ -2465,7 +2450,7 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 		}
 
 		if( EscreveArquivoComRespostas == 1){
-			logfile2 <<  "Solution status = " << " [" << cplex.getStatus() << "] "<< endl;
+			logfile2 <<  "Solution status = " << " [" << cplex->getStatus() << "] "<< endl;
 			logfile2 << "Solution primal cost = " << primal << endl;
 			logfile2 << "Solution dual cost = " << dual << endl ;
 			logfile2 << "Soution with delay = " << SolucaoReal << endl;
@@ -2478,34 +2463,36 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 
 		if( EscreveVariaveis == 1){
 	// Imprimi Variaveis
-			EscreveVariaveisAlfaDoModeloAposResolucao(EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, Alfa);
-			EscreveVariaveisBetaDoModeloAposResolucao(EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, Beta);
-			EscreveVariaveisBetaProducaoDoModeloAposResolucao(EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, BetaProducao);
-			EscreveVariaveisTveiDoModeloAposResolucao(EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, Tvei);
-			EscreveVariaveisTPveiDoModeloAposResolucao(EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, TPvei);
-			EscreveVariaveisZeDoModeloAposResolucao(EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, Ze);
-			EscreveVariaveisZrDoModeloAposResolucao(EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, Zr);
-			EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposResolucao( EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, AEe, RoAEe, PEe, RoPEe );
-			EscreveVariaveisAPpRoAPpPPpRoPPpDoModeloAposResolucao( EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, cplex, APp, RoAPp, PPp, RoPPp );
+			EscreveVariaveisAlfaDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Alfa);
+			EscreveVariaveisBetaDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Beta);
+			EscreveVariaveisBetaProducaoDoModeloAposResolucao(		EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, BetaProducao);
+			EscreveVariaveisTveiDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Tvei);
+			EscreveVariaveisTPveiDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, TPvei);
+			EscreveVariaveisZeDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Ze);
+			EscreveVariaveisZrDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Zr);
+			EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposResolucao( 	EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, AEe, RoAEe, PEe, RoPEe );
+			EscreveVariaveisAPpRoAPpPPpRoPPpDoModeloAposResolucao( 	EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, APp, RoAPp, PPp, RoPPp );
 
 		}
 
 		if( OutPut1 == 1){
 	// Itinerario dos veiculos
-			EscreveItinerarioVeiculos( EscreveNaTelaResultados, EscreveArquivoComRespostas, logfile2,cplex, Alfa,  Tvei, TPvei);
+			EscreveItinerarioVeiculos( EscreveNaTelaResultados, EscreveArquivoComRespostas, logfile2,	*cplex, Alfa,  Tvei, TPvei);
 		}
 
 		if( OutPut2 == 1){
 	// Tempo de cada entrega em cada cliente
-			EscreveEntregasNosClientes(EscreveNaTelaResultados,EscreveArquivoComRespostas, logfile2,cplex, Alfa,  Tvei);
+			EscreveEntregasNosClientes(EscreveNaTelaResultados,EscreveArquivoComRespostas, logfile2,	*cplex, Alfa,  Tvei);
 	// Veiculos usados
-			EscreveUtilizacaoVeiculos( EscreveNaTelaResultados,EscreveArquivoComRespostas, logfile2,cplex, Alfa,  Tvei);
+			EscreveUtilizacaoVeiculos( EscreveNaTelaResultados,EscreveArquivoComRespostas, logfile2,	*cplex, Alfa,  Tvei);
 		}
 
 		logfile1.close();
 		logfile2.close();
 
-		model.end();
+		//model.end();				// problema, trava o programa. olhar! falam que demora muito. que é melhor deletar o objeto IloClpex
+
+		delete(cplex);
 
 		Alfa.clear();
 		Beta.clear();

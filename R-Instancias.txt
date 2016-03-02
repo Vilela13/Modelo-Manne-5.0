@@ -1,6 +1,4 @@
- * 12:30:49 de 09:10:2015 
+
+ * 10:01:42 de 02:03:2016 
 Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
- Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.134 	 
- * 12:31:14 de 09:10:2015 
-Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
- Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.185 	 
+ p-C2P8-V1.txt 	Unknow 	-1.000 	 -1.000 	 -1.000 	 -1 	 -1 	 -1.000 	 -1 	 -1.000 	 -1.000 	 61.026 	 
