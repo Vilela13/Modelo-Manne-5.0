@@ -54,3 +54,12 @@ Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	
  * 22:05:10 de 09:03:2016 
 Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
  Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.173 	 
+ * 23:39:11 de 09:03:2016 
+Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
+ Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.261 	 
+ * 23:45:51 de 09:03:2016 
+Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
+ Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.215 	 
+ * 23:46:25 de 09:03:2016 
+Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
+ Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.093 	 

@@ -2535,22 +2535,10 @@ No::~No(){
 
 
 	TCVP.clear();
-	for (int i = 0; i < (int) CVP.size(); i++ ){
-		CVP[i].clear();
-	}
 	CVP.clear();
 	TCDE.clear();
-	for (int i = 0; i < (int) CDE.size(); i++ ){
-		CDE[i].clear();
-	}
 	CDE.clear();
-	for (int i = 0; i < (int) CDE.size(); i++ ){
-		Dpe[i].clear();
-	}
 	Dpe.clear();
-	for (int i = 0; i < (int) Dep.size(); i++ ){
-		Dep[i].clear();
-	}
 	Dep.clear();
 	Pvi.clear();
 	TPp.clear();

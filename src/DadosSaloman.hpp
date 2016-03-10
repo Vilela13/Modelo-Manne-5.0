@@ -479,6 +479,8 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	ComandosR << "+ xlim( min(x)- 10, max(x)+10 ) + ylim( min(y)-10,max(y)+10 )" << endl; //ComandosR << "+ xlim(0," << LimiteplotarX << ") + ylim(0," << LimiteplotarY << ")" << endl;
 	ComandosR << "dev.off() ;" << endl;
 
+	TipoComando.clear();
+	NomeArquivoComandoR.clear();
 	ComandosR.close();
 
 	//cout << " Aqui 3" << endl;
@@ -554,6 +556,7 @@ void DadosSaloman::EscreverComandosExcel(string Nome){
         ComandosExcel << "N" <<  i  << "\t" << Coordenadas[i][0] << "\t" << Coordenadas[i][1] << endl ;
     }
 
+    TipoComando.clear();
     ComandosExcel.close();
 
 }
@@ -1278,6 +1281,9 @@ void DadosSaloman::CriarInstanciaSaloman(string Nome){
 
 		InstanciaSaloman << " Nao se enquadra! " << endl;
 	}
+
+	NomeAux.clear();
+	Versao.clear();
 
 	DadosInstanciaSalomonCriada.close();
 	InstanciaSaloman.close();
