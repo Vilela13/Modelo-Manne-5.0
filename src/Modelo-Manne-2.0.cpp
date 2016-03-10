@@ -9,18 +9,19 @@ int main(int argc, char **argv) {
 		list<string> ListaInstancias;
 		string Nome;
 
-
 		int EscreveDadosLidosNaTela;
 
 		list<string>::iterator it;
 
 		//ofstream ArquivoExcelResposta;
-		 FILE *ArquivoExcelResposta;
+		FILE *ArquivoExcelResposta;
 
-// Exscrever a dadta
-		 time_t timer;
-		 char buffer[26];
-		 struct tm* tm_info;
+	// Exscrever a dadta
+		time_t timer;
+		char buffer[26];
+		struct tm* tm_info;
+
+
 
 // Variavel que indica se resolveu
 		int resolveu;
@@ -39,9 +40,18 @@ int main(int argc, char **argv) {
 		double Tempo;
 		EscreveDadosLidosNaTela = 0;
 
+		ifstream ArquivoInstanciaSaloman( "ArquivosSaloman.txt" );
+		ifstream ArquivoInstancia;
+
+		DadosSaloman *InstanciaSaloman;
+		No *Instancia;
+
+		string Instancias;
+		string Saida;
+
 	// -------------------------- Le arquivo com as instancias de Solomon e as guarda em uma lista ----------------------- //
 
-		ifstream ArquivoInstanciaSaloman( "ArquivosSaloman.txt" );
+
 		if(!ArquivoInstanciaSaloman){
 			cout << " Arquivo nao Existe! \n FUDEU MUITO! \n";
 		}else{
@@ -61,7 +71,7 @@ int main(int argc, char **argv) {
 
 	// -------------------------- Le nome dos arquivos Solomon, carrega os dados, cria arquivo do R, Excel e cria arquivo que pode ser lido pelo Modelo ----------------------- //
 
-		DadosSaloman *InstanciaSaloman;
+
 
 		while( ListaInstancias.size() > 0){
 			InstanciaSaloman = new DadosSaloman;
@@ -109,10 +119,9 @@ int main(int argc, char **argv) {
 
 	// Resolve o problema
 
-		string Instancias;
+
 		Instancias = argv[1];
 
-		ifstream ArquivoInstancia;
 		ArquivoInstancia.open(Instancias.c_str());
 		if ( ArquivoInstancia.is_open() ){
 			ArquivoInstancia >> Nome;
@@ -128,7 +137,7 @@ int main(int argc, char **argv) {
 
 			//cout << endl << endl << " Lendo arquivo " << endl << endl << endl;
 
-			string Saida;
+
 			Saida = "R-";				// coloca Res- no char*
 			Saida += Instancias;
 			//Saida += ".txt";
@@ -154,7 +163,7 @@ int main(int argc, char **argv) {
 			fprintf(ArquivoExcelResposta, "Instância \t Status \t Solução_Primal \t Solução_Dual \t Solução_Com_Atrazo \t Construcoes_Com_Atrazo \t Demandas_Afetadas \t Valor_Atrazo_Construcoes \t Plantas_Com_Atrazo \t Valor_Atrazo_Plantas \t Gap \t Tempo \n");
 			fclose(ArquivoExcelResposta);
 
-			No *Instancia;
+
 
 			while( !ListaInstancias.empty()){
 				Instancia = new No;
@@ -205,14 +214,22 @@ int main(int argc, char **argv) {
 
 
 
+			ListaInstancias.clear();
+			Nome.clear();
+			Instancias.clear();
+			Saida.clear();
 			return 1;
 		}else{
+
+			ListaInstancias.clear();
+			Nome.clear();
+			Instancias.clear();
+			Saida.clear();
 			cout << "\n \n Arquivo inexistente! \n \n";
 			return 0;
 		}
 
 
-		ListaInstancias.clear();
 	}else{
 		cout << "\n \n Passagem de parametros errada \n \n";
 		return 0;

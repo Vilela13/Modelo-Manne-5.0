@@ -1,5 +1,0 @@
-Teste1.txt => planta atender a uma construção que está mais perto de outra planta
-Teste2.txt => planta atender a uma construção que está mais perto de outra planta, uma entrega tem mais de uma demanda
-Teste3.txt => planta atender a uma construção que está mais perto de outra planta, duas entregas tem mais de uma demanda
-Teste4.txt => planta atender a uma construção que está do lado de outra planta, duas entregas tem mais de uma demanda
-Teste5.txt => planta atender a uma construção que está do lado de outra planta mas não uma que está mais perto da outra que ela.

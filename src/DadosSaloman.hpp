@@ -272,8 +272,12 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	EscreveNoZero = 0;
 	EscreveDemadnas = 0;
 
+	DIR* dp1;
+	DIR* dp2;
 
-	if(!opendir ("ComR")){
+	dp1 = opendir ("ComR");
+
+	if(!dp1){
 		cout <<  "\n Nao tem diretorio \"ComR\"!!            FUDEU MUITO!! \n" << endl;
 
 		if(system("mkdir ComR;") == 0){
@@ -283,10 +287,12 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 		}
 
 		/* Outra maneira de criar arquivos
+
 		SituacaoDiretorio = mkdir("./myfolder", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		*/
+		dp1 = opendir ("ComR");
 
-		if(!opendir ("ComR")){
+		if(!dp1){
 			cout << "\n Nao tem diretorio \"ComR\"!!             FUDEU MUITO!! \n" << endl;
 		}else{
 			cout << " Tem diretorio \"ComR\" !!  " << endl;
@@ -294,6 +300,8 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	}else{
 		cout << " Tem diretorio \"ComR\" !!  " << endl;
 	}
+
+	closedir( dp1 );
 
 
 	cout << endl <<  " Arquivo do comando R = " <<   TipoComando << endl << endl;
@@ -403,15 +411,33 @@ void DadosSaloman::EscreverComandosR(string Nome, char TipoArquivoSaida){
 	}
 	ComandosR << ")" << endl << ")"<< endl;
 
-	if(!opendir ("Imagens")){
-			cout <<  "\n Nao tem diretorio Imagens!!           FUDEU MUITO!! \n" << endl;
+	dp2 = opendir ("Imagens");
 
-			if( system("mkdir Imagens;") == 0){
-				cout << " Criou pasta Imagens " << endl;
-			}else{
-				cout << " Problema ao criar pasta Imagens " << endl;
-			}
+	if(!dp2){
+		cout <<  "\n Nao tem diretorio Imagens!!          FUDEU MUITO!! \n" << endl;
+
+		if(system("mkdir Imagens;") == 0){
+			cout << " Criou pasta Imagens" << endl;
+		}else{
+			cout << " Problema ao criar pasta Imagens" << endl;
+		}
+
+		/* Outra maneira de criar arquivos
+
+		SituacaoDiretorio = mkdir("./myfolder", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		*/
+		dp2 = opendir ("Imagens");
+
+		if(!dp2){
+			cout << "\n Nao tem diretorio \"Imagens\"!!             FUDEU MUITO!! \n" << endl;
+		}else{
+			cout << " Tem diretorio \"Imagens\" !!  " << endl;
+		}
+	}else{
+		cout << " Tem diretorio \"Imagens\" !!  " << endl;
 	}
+
+	closedir( dp2 );
 
 	//NomeArquivoComandoR = "./Imagens/";
 	NomeArquivoComandoR += Nome;
@@ -488,10 +514,14 @@ void DadosSaloman::EscreverComandosExcel(string Nome){
 	TipoComando = "./ComE/CmdE-";
 	TipoComando += Nome;
 
-	if(!opendir ("ComE")){
-		cout <<  "\n Nao tem diretorio \"ComE\"!!         FUDEU MUITO!! \n" << endl;
+	DIR* dp1;
 
-		if(system("mkdir ComE;") == 0){
+	dp1 = opendir ("ComE");
+
+	if(!dp1){
+		cout <<  "\n Nao tem diretorio \"ComE\"!!            FUDEU MUITO!! \n" << endl;
+
+		if(system("mkdir ComE") == 0){
 			cout << " Criou pasta ComE" << endl;
 		}else{
 			cout << " Problema ao criar pasta ComE" << endl;
@@ -501,15 +531,18 @@ void DadosSaloman::EscreverComandosExcel(string Nome){
 
 		SituacaoDiretorio = mkdir("./myfolder", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		*/
+		dp1 = opendir ("ComE");
 
-		if(!opendir ("ComE")){
-			cout << "\n Nao tem diretorio \"ComE\"!!        FUDEU MUITO!! \n" << endl;
+		if(!dp1){
+			cout << "\n Nao tem diretorio \"ComE\"!!             FUDEU MUITO!! \n" << endl;
 		}else{
 			cout << " Tem diretorio \"ComE\" !!  " << endl;
 		}
 	}else{
 		cout << " Tem diretorio \"ComE\" !!  " << endl;
 	}
+
+	closedir( dp1 );
 
 	cout << " TipoComaTipoComandondo = " << TipoComando <<  endl << endl;
 
@@ -526,8 +559,12 @@ void DadosSaloman::EscreverComandosExcel(string Nome){
 }
 
 void DadosSaloman::CriaPastaInstS(){
-	if(!opendir ("InstS")){
-		cout <<  "\n\n Nao tem diretorio \"InstS\" !!        FUDEU MUITO!! \n" << endl;
+	DIR* dp1;
+
+	dp1 = opendir ("InstS");
+
+	if(!dp1){
+		cout <<  "\n Nao tem diretorio \"InstS\"!!            FUDEU MUITO!! \n" << endl;
 
 		if(system("mkdir InstS;") == 0){
 			cout << " Criou pasta InstS" << endl;
@@ -539,20 +576,27 @@ void DadosSaloman::CriaPastaInstS(){
 
 		SituacaoDiretorio = mkdir("./myfolder", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		*/
+		dp1 = opendir ("InstS");
 
-		if(!opendir ("InstS")){
-			cout << "\n Nao tem diretorio  \"InstS\" !!        FUDEU MUITO!! \n" << endl;
+		if(!dp1){
+			cout << "\n Nao tem diretorio \"InstS\"!!             FUDEU MUITO!! \n" << endl;
 		}else{
 			cout << " Tem diretorio \"InstS\" !!  " << endl;
 		}
 	}else{
 		cout << " Tem diretorio \"InstS\" !!  " << endl;
 	}
+
+	closedir( dp1 );
 }
 
 void DadosSaloman::CriaPastaDat(){
-	if(!opendir ("Dat")){
-		cout <<  "\n\n Nao tem diretorio \"Dat\" !!        FUDEU MUITO!! \n" << endl;
+	DIR* dp1;
+
+	dp1 = opendir ("Dat");
+
+	if(!dp1){
+		cout <<  "\n Nao tem diretorio \"Dat\"!!            FUDEU MUITO!! \n" << endl;
 
 		if(system("mkdir Dat;") == 0){
 			cout << " Criou pasta Dat" << endl;
@@ -564,15 +608,18 @@ void DadosSaloman::CriaPastaDat(){
 
 		SituacaoDiretorio = mkdir("./myfolder", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		*/
+		dp1 = opendir ("Dat");
 
-		if(!opendir ("Dat")){
-			cout << "\n Nao tem diretorio  \"Dat\" !!        FUDEU MUITO!! \n" << endl;
+		if(!dp1){
+			cout << "\n Nao tem diretorio \"Dat\"!!             FUDEU MUITO!! \n" << endl;
 		}else{
 			cout << " Tem diretorio \"Dat\" !!  " << endl;
 		}
 	}else{
 		cout << " Tem diretorio \"Dat\" !!  " << endl;
 	}
+
+	closedir( dp1 );
 }
 
 void DadosSaloman::CriarInstanciaSaloman(string Nome){

@@ -1620,7 +1620,11 @@ void No::DominioAPpPPp( TipoAPp APp, TipoPPp PPp, IloModel& model, int EscreveRe
 
 // Cria pastas
 void No::VerificaOuCriaPastaOut(int EscreveNaTelaResultados){
-	if(!opendir ("Out")){
+	DIR* dp1;
+
+	dp1 = opendir ("Out");
+
+	if(!dp1){
 		cout <<  "\n\n Nao tem diretorio \"Out\" !!        FUDEU MUITO!! \n" << endl;
 
 		if(system("mkdir Out;") == 0){
@@ -1634,7 +1638,8 @@ void No::VerificaOuCriaPastaOut(int EscreveNaTelaResultados){
 		SituacaoDiretorio = mkdir("./myfolder", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		*/
 
-		if(!opendir ("Out")){
+		dp1 = opendir ("Out");
+		if(!dp1){
 			cout << "\n Nao tem diretorio  \"InstS\" !!        FUDEU MUITO!! \n" << endl;
 		}else{
 			cout << " Tem diretorio \"Out\" !!  " << endl;
@@ -1644,9 +1649,14 @@ void No::VerificaOuCriaPastaOut(int EscreveNaTelaResultados){
 			cout << " Tem diretorio \"Out\" !!  " << endl;
 		}
 	}
+	closedir( dp1 );
 }
 void No::VerificaOuCriaPastaSol(int EscreveNaTelaResultados){
-	if(!opendir ("Sol")){
+	DIR* dp1;
+
+	dp1 = opendir ("Sol");
+
+	if(!dp1){
 		cout <<  "\n\n Nao tem diretorio \"Sol\" !!        FUDEU MUITO!! \n" << endl;
 
 		if(system("mkdir Sol;") == 0){
@@ -1660,7 +1670,8 @@ void No::VerificaOuCriaPastaSol(int EscreveNaTelaResultados){
 		SituacaoDiretorio = mkdir("./myfolder", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		*/
 
-		if(!opendir ("Sol")){
+		dp1 = opendir ("Sol");
+		if(!dp1){
 			cout << "\n Nao tem diretorio  \"Sol\" !!        FUDEU MUITO!! \n" << endl;
 		}else{
 			cout << " Tem diretorio \"Sol\" !!  " << endl;
@@ -1670,6 +1681,7 @@ void No::VerificaOuCriaPastaSol(int EscreveNaTelaResultados){
 			cout << " Tem diretorio \"Sol\" !!  " << endl;
 		}
 	}
+	closedir( dp1 );
 }
 
 // Escreve variáveis
@@ -2504,17 +2516,41 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 		TPvei.clear();
 		EscreveRestricao.clear();
 
+		AEe.clear();
+		PEe.clear();
+		APp.clear();
+		PPp.clear();
+
+		RoAEe.clear();
+		RoPEe.clear();
+		RoAPp.clear();
+		RoPPp.clear();
+
 		return (1);
 	}
 }
 
 No::~No(){
 
+
+
 	TCVP.clear();
+	for (int i = 0; i < (int) CVP.size(); i++ ){
+		CVP[i].clear();
+	}
 	CVP.clear();
 	TCDE.clear();
+	for (int i = 0; i < (int) CDE.size(); i++ ){
+		CDE[i].clear();
+	}
 	CDE.clear();
+	for (int i = 0; i < (int) CDE.size(); i++ ){
+		Dpe[i].clear();
+	}
 	Dpe.clear();
+	for (int i = 0; i < (int) Dep.size(); i++ ){
+		Dep[i].clear();
+	}
 	Dep.clear();
 	Pvi.clear();
 	TPp.clear();
@@ -2539,6 +2575,8 @@ No::~No(){
 	TempoPodePostergarPlanta.clear();
 	PenalidadeDesrespeitoJanelaDeTempoEmpresa.clear();
 	PenalidadeDesrespeitoJanelaDeTempoPlanta.clear();
+
+	env.end();
 
 
 }

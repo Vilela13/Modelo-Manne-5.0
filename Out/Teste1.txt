@@ -14,7 +14,7 @@ Probing time = 0.00 sec. (0.22 ticks)
 Clique table members: 32.
 MIP emphasis: balance optimality and feasibility.
 MIP search method: dynamic search.
-Parallel mode: deterministic, using up to 2 threads.
+Parallel mode: deterministic, using up to 6 threads.
 Root relaxation solution time = 0.00 sec. (0.72 ticks)
 
         Nodes                                         Cuts/
@@ -33,8 +33,8 @@ Root relaxation solution time = 0.00 sec. (0.72 ticks)
       0     0       41.0000     6       42.0000       Cuts: 9      126    2.38%
       0     0       41.0000     6       42.0000   Impl Bds: 6      127    2.38%
       0     0       41.0000     6       42.0000       Cuts: 2      128    2.38%
-      0     2       41.0000     6       42.0000       41.0000      128    2.38%
-Elapsed time = 0.14 sec. (28.77 ticks, tree = 0.01 MB, solutions = 1)
+      0     0        cutoff             42.0000       42.0000      128    0.00%
+Elapsed time = 0.17 sec. (27.33 ticks, tree = 0.00 MB, solutions = 1)
 
 Cover cuts applied:  2
 Implied bound cuts applied:  27
@@ -44,10 +44,10 @@ Zero-half cuts applied:  1
 Gomory fractional cuts applied:  1
 
 Root node processing (before b&c):
-  Real time             =    0.13 sec. (28.60 ticks)
-Parallel b&c, 2 threads:
-  Real time             =    0.05 sec. (0.52 ticks)
+  Real time             =    0.17 sec. (27.34 ticks)
+Parallel b&c, 6 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
   Sync time (average)   =    0.00 sec.
   Wait time (average)   =    0.00 sec.
                           ------------
-Total (root+branch&cut) =    0.18 sec. (29.12 ticks)
+Total (root+branch&cut) =    0.17 sec. (27.34 ticks)
