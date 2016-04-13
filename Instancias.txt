@@ -1,2 +1,3 @@
 Teste1.txt
+Teste3.txt
 EOF

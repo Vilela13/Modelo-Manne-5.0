@@ -223,7 +223,7 @@ public:
 
 // Funções que chama o Cplex
 
-    int Cplex(string, int&, double&, double&, double&, int&, int&, double&, int&, double&s, double&, double&);
+    int Cplex(string, int, int&, double&, double&, double&, int&, int&, double&, int&, double&s, double&, double&);
 
 // Escrever em diretorio a saída
 
@@ -2217,7 +2217,7 @@ void No::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int EscreveArquiv
 }
 
 // Resolve modelo
-int No::Cplex(string Nome, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo){
+int No::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo){
 
 	int Escreve;				// Escreve variaveis criadas
 
@@ -2373,7 +2373,7 @@ int No::Cplex(string Nome, int &status, double &primal, double &dual, double& So
 	if(SaidaPastaSeparada == 1){
 		cplex->setOut(logfile1);
 	}
-	cplex->setParam(IloCplex::TiLim, 60);
+	cplex->setParam(IloCplex::TiLim,  TempoExecucao);
 	cplex->setParam(IloCplex::Threads, 6);
 
 	Tempo1 = cplex->getCplexTime();

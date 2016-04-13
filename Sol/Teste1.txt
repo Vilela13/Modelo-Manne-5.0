@@ -6,7 +6,7 @@ Cosntructions afected by the delay = 0
 Demands afected by the delay = 0
 Constructions's Delay = 0
 Gap = 0%
-Tempo = 0.092629 segundos. 
+Tempo = 0.0889142 segundos. 
 
  Veiculo 0
 Alfa_0_0_0 [1]  

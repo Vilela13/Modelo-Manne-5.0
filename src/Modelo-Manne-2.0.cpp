@@ -4,7 +4,7 @@
 int main(int argc, char **argv) {
 
 
-	if( argc == 2){
+	if( argc == 4){
 
 		list<string> ListaInstancias;
 		string Nome;
@@ -48,6 +48,9 @@ int main(int argc, char **argv) {
 
 		string Instancias;
 		string Saida;
+
+		string TipoDeEntrada;
+		int TempoExecucao;
 
 	// -------------------------- Le arquivo com as instancias de Solomon e as guarda em uma lista ----------------------- //
 
@@ -120,18 +123,37 @@ int main(int argc, char **argv) {
 	// Resolve o problema
 
 
-		Instancias = argv[1];
+		TipoDeEntrada = argv[1];
+		Instancias = argv[2];
+		TempoExecucao = atoi( argv[3] ) ;
 
-		ArquivoInstancia.open(Instancias.c_str());
-		if ( ArquivoInstancia.is_open() ){
-			ArquivoInstancia >> Nome;
-			while( Nome != "EOF"){
-				//cout << " coloca lista = " << Nome  << endl ;
-				ListaInstancias.push_back(Nome);
+		if( TipoDeEntrada.compare(0,3,"arq") == 0 ){
+			ArquivoInstancia.open(Instancias.c_str());
+			if ( ArquivoInstancia.is_open() ){
 				ArquivoInstancia >> Nome;
+				while( Nome != "EOF"){
+					//cout << " coloca lista = " << Nome  << endl ;
+					ListaInstancias.push_back(Nome);
+					ArquivoInstancia >> Nome;
 
+				}
+				ArquivoInstancia.close();
 			}
-			ArquivoInstancia.close();
+		}else{
+			if( TipoDeEntrada.compare(0,4,"inst") == 0 ){
+				ListaInstancias.push_back(Instancias);
+			}else{
+				cout << "(" << TipoDeEntrada << ")";
+				printf( " TipoDeEntrada  Problema na definição da entrada das instancias. \n\n\n");
+				ListaInstancias.clear();
+				Nome.clear();
+				Instancias.clear();
+				Saida.clear();
+				return 0;
+			}
+		}
+
+
 
 		// ----------- Le um arquivo com as instancias a serem resolvidas pelo modelo, abre o arquivo com a instancia e o resolve -------------------------- //
 
@@ -139,7 +161,12 @@ int main(int argc, char **argv) {
 
 
 			Saida = "R-";				// coloca Res- no char*
-			Saida += Instancias;
+			if( TipoDeEntrada.compare(0,3,"arq") == 0 ){
+				Saida += Instancias;
+			}else{
+				Saida += "Instancias.txt";
+			}
+
 			//Saida += ".txt";
 
 			//cout << " Saida = > "<< Saida << "   Tamanho entrada = " << TamanhoEntrda << endl;
@@ -159,8 +186,10 @@ int main(int argc, char **argv) {
 			strftime(buffer, 26, " * %H:%M:%S de %d:%m:%Y", tm_info);
 
 
-			fprintf(ArquivoExcelResposta,"%s \n", buffer);
-			fprintf(ArquivoExcelResposta, "Instância \t Status \t Solução_Primal \t Solução_Dual \t Solução_Com_Atrazo \t Construcoes_Com_Atrazo \t Demandas_Afetadas \t Valor_Atrazo_Construcoes \t Plantas_Com_Atrazo \t Valor_Atrazo_Plantas \t Gap \t Tempo \n");
+			if( TipoDeEntrada.compare("arq") == 0 ){
+				fprintf(ArquivoExcelResposta,"%s \n", buffer);
+				fprintf(ArquivoExcelResposta, "Instância \t Status \t Solução_Primal \t Solução_Dual \t Solução_Com_Atrazo \t Construcoes_Com_Atrazo \t Demandas_Afetadas \t Valor_Atrazo_Construcoes \t Plantas_Com_Atrazo \t Valor_Atrazo_Plantas \t Gap \t Tempo \n");
+			}
 			fclose(ArquivoExcelResposta);
 
 
@@ -174,7 +203,7 @@ int main(int argc, char **argv) {
 
 				if( Instancia->LeDados(Nome, EscreveDadosLidosNaTela) == 1){
 
-					resolveu = Instancia->Cplex(Nome, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes, PlantasComAtrazo, ValorAtrazoPlantas,  Gap, Tempo);
+					resolveu = Instancia->Cplex(Nome,  TempoExecucao, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes, PlantasComAtrazo, ValorAtrazoPlantas,  Gap, Tempo);
 					cout  << " Resolveu = " << resolveu << endl << endl ;
 
 					ArquivoExcelResposta = fopen(Saida.c_str(), "a");
@@ -219,15 +248,7 @@ int main(int argc, char **argv) {
 			Instancias.clear();
 			Saida.clear();
 			return 1;
-		}else{
 
-			ListaInstancias.clear();
-			Nome.clear();
-			Instancias.clear();
-			Saida.clear();
-			cout << "\n \n Arquivo inexistente! \n \n";
-			return 0;
-		}
 
 
 	}else{
