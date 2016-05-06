@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 		double Tempo;
 		EscreveDadosLidosNaTela = 0;
 
-		ifstream ArquivoInstanciaSaloman( "ArquivosSaloman.txt" );
+		ifstream ArquivoInstanciaSaloman( "ArquivosSolomon.txt" );
 		ifstream ArquivoInstancia;
 
 		DadosSaloman *InstanciaSaloman;
