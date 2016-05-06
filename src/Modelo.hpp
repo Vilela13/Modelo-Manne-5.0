@@ -2374,7 +2374,7 @@ int No::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, doub
 		cplex->setOut(logfile1);
 	}
 	cplex->setParam(IloCplex::TiLim,  TempoExecucao);
-	cplex->setParam(IloCplex::Threads, 6);
+	cplex->setParam(IloCplex::Threads, 12);
 
 	Tempo1 = cplex->getCplexTime();
 
