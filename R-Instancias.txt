@@ -92,3 +92,4 @@ Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	
  Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.816 	 
  Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.817 	 
  Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 0.799 	 
+ p-C101-P1C5-I2-V1.txt 	Optimal 	80.265 	 80.265 	 80.265 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 14.102 	 
