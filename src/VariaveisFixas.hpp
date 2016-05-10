@@ -18,11 +18,11 @@
 #define CapacidadeCaminhao 10
 #define TempoDeVidaConcretoVariaveisFixas 1.5
 
-#define HorarioFuncionamentoEmpresaQuePodeAdiantar 6
-#define HorarioFuncionamentoEmpresaQuePodePostergar 18
+#define HorarioFuncionamentoEmpresaQuePodeAdiantar 0
+#define HorarioFuncionamentoEmpresaQuePodePostergar 24
 
-#define HorarioFuncionamentoPlantaQuePodeAdiantar 5
-#define HorarioFuncionamentoPlantaQuePodePostergar 18
+#define HorarioFuncionamentoPlantaQuePodeAdiantar 0
+#define HorarioFuncionamentoPlantaQuePodePostergar 24
 
 
 #endif /* VARIAVEISFIXAS_HPP_ */

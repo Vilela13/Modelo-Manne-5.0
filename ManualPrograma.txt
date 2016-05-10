@@ -1,0 +1,8 @@
+Manual
+
+O porgarama precisa do parametro "arq" ou "inst"
+
+-> "arq" é para a entrada de um arquivo contendo o nome das instâncias que se deve processar. O nome desse arquivo deve ser colocado logo apoós o "arq". Essas intâncias devem estra na pasta InstS/ e o nome das intãncias devem ser separadas por um paragrafo no aruivo que contem o nome delas. No final deve se ter o a palavra "EOF" sinalizando que se acabou as intâncias.
+-> "inst" é para o caso de se rodar apenas uma intância. Essa intância deve estar na pasta InstS/ e o nome da instância deve vir logo após o "inst".
+
+Em seguida deve se colocar o tempo limite que se irá executar o programa. Ele deve estar em segundos.

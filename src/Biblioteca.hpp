@@ -50,7 +50,6 @@ ILOSTLBEGIN
 
 using namespace std;
 
-#include "DadosSaloman.hpp"
 
 #include "Modelo.hpp"
 

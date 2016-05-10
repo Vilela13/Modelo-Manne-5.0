@@ -919,7 +919,7 @@ void No::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa(int TipoPenalidade, in
 
 	if( TipoPenalidade == 2){
 		for( int e = 0; e < NE; e++){
-			PenalidadeDesrespeitoJanelaDeTempoEmpresa[e] = 400;
+			PenalidadeDesrespeitoJanelaDeTempoEmpresa[e] = 10000;
 			if( Escreve == 1){
 				cout << " Penalidade construcao[" << e << "] = " << PenalidadeDesrespeitoJanelaDeTempoEmpresa[e] << endl;
 			}
@@ -952,7 +952,7 @@ void No:: CalculaPenalidadeDesrespeitoJanelaDeTempoPlanta(int TipoPenalidade, in
 
 	if( TipoPenalidade == 2){
 		for( int p = 0; p < NP; p++){
-			PenalidadeDesrespeitoJanelaDeTempoPlanta[p] = 400;
+			PenalidadeDesrespeitoJanelaDeTempoPlanta[p] = 10000;
 			if( Escreve == 1){
 				cout << " Penalidade planta[" << p << "] = " << PenalidadeDesrespeitoJanelaDeTempoPlanta[p] << endl;
 			}
