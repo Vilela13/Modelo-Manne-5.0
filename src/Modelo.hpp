@@ -10,14 +10,15 @@
 
 #include "Biblioteca.hpp"
 
-#define TipoLocalizacao vector < vector < double > >
+//#define TipoLocalizacao vector < vector < float > >			// coordenadas geograficas, X e Y
 
-#define TipoTCVP vector < int >
-#define TipoCVP vector < vector < int > >
-#define TipoTCDE vector < int >
-#define TipoCDE vector < vector < int > >
+#define TipoTCVP vector < int >								//Tamanho do Conjunto de Veiculos por Planta
+#define TipoCVP vector < vector < int > >					//Conjunto dos Veiculos da Planta
 
-#define TipoDistancia vector < vector < double > >
+#define TipoTCDE vector < int >								// Tamanho do conjunto de demandas por entregas
+#define TipoCDE vector < vector < int > >					// Conjunto de demanas por entrega
+
+#define TipoTempoEntrePontos vector < vector < float > >			// tipo de tempo entre dois conjuntos de pontos
 
 #define TipoPvi vector < vector < vector < double > > >
 #define TipoTPp vector < double >
@@ -115,7 +116,7 @@ public:
 	int 		NE;			// Número de entregas
 	int 		NV;			// Número de veículos
 
-	double 		V;			// Velocidade dos caminhões
+	double 		Vel;			// Velocidade dos caminhões
 	double 		TVC;		// Tempo de vida do concreto
 
 	TipoTCVP 	TCVP;		// Tamanho do conjunto de veículos (caminhões) por planta
@@ -124,9 +125,9 @@ public:
 	TipoTCDE 	TCDE;		// Tamanho do conjunto de demandas por entregas
 	TipoCDE 	CDE;		// Conjunto de demanas por entrega
 
-	TipoLocalizacao L;		// coordenada dos pontos
-	TipoDistancia Dpe;		// Distancia entre uma planta e um entrega
-	TipoDistancia Dep;		// Distancia entre uma entrega e uma planta
+	//TipoLocalizacao Loc;		// coordenada dos pontos
+	TipoTempoEntrePontos TEMpe;		// Tempo entre uma planta e um entrega
+	TipoTempoEntrePontos TEMep;		// Tempo entre uma entrega e uma planta
 
 	TipoPvi		Pvi;		// Tempo para se descarregar o veiculo para a demanda i
 	TipoTPp		TPp;		// Tempo para se carregar na planta
@@ -244,7 +245,7 @@ No::No(){
 	NP  = 0;
 	NE  = 0;
 	NV  = 0;
-	V = 0;
+	Vel = 0;
 	TVC = 0;
 	c1 = NULL;
 	c2 = NULL;
@@ -518,10 +519,10 @@ void No::LeNumeroPlantasEntregasVeiculos(int comentarios){
 }
 
 void No::LeVelocidadeTempoVidaConcreto(int comentarios){
-	arq >> V;
+	arq >> Vel;
 	arq >> TVC;
 	if( comentarios == 1){
-		cout << " V (velocidade)  "<< V << endl;
+		cout << " V (velocidade)  "<< Vel << endl;
 		cout << " TVC (tempo de vida do concreto) "<< TVC << endl;
 	}
 }
@@ -581,9 +582,9 @@ void No::LeDemandasPorEntrada(int comentarios){
 }
 
 void No::LeDistanciaPlantaEntrada(int comentarios){
-	Dpe.resize(NP);
+	TEMpe.resize(NP);
 	for(int p = 0; p < NP; p++){
-		Dpe[p].resize(NE);
+		TEMpe[p].resize(NE);
 	}
 
 	if( comentarios == 1){
@@ -599,9 +600,9 @@ void No::LeDistanciaPlantaEntrada(int comentarios){
 			cout << p+1 << '\t';
 		}
 		for( int e = 0; e <  NE; e++){
-			arq >> Dpe[p][e];
+			arq >> TEMpe[p][e];
 			if( comentarios == 1){
-				cout << Dpe[p][e] << " ";
+				cout << TEMpe[p][e] << " ";
 			}
 		}
 		if( comentarios == 1){
@@ -611,9 +612,9 @@ void No::LeDistanciaPlantaEntrada(int comentarios){
 }
 
 void No::LeDistanciaEntregaPlanta(int comentarios){
-	Dep.resize(NE);
+	TEMep.resize(NE);
 	for(int e = 0; e < NE; e++){
-		Dep[e].resize(NP);
+		TEMep[e].resize(NP);
 	}
 
 	if( comentarios == 1){
@@ -629,9 +630,9 @@ void No::LeDistanciaEntregaPlanta(int comentarios){
 			cout << e+1 << '\t';
 		}
 		for( int p = 0; p <  NP; p++){
-			arq >> Dep[e][p];
+			arq >> TEMep[e][p];
 			if( comentarios == 1){
-				cout << Dep[e][p] << " ";
+				cout << TEMep[e][p] << " ";
 			}
 		}
 		if( comentarios == 1){
@@ -735,7 +736,7 @@ void No::CalculaTempoMinimoDeAtendimentoEntreDuasEntregas(int comentarios){
 						cout << " Entrega [" << e1 + 1 << "] para a Entrega [" << e2+ 1 << "] = ";
 					}
 					for( int j = 0; j < TCDE[e2]; j++){
-						Svii[Aux2][e1][e2] = Dep[e1][p] + TPp[p] + Dpe[p][e2];
+						Svii[Aux2][e1][e2] = TEMep[e1][p] + TPp[p] + TEMpe[p][e2];
 						if( comentarios == 1){
 							cout << Svii[Aux2][e1][e2] << '\t';
 						}
@@ -1323,19 +1324,19 @@ void No::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, TipoTvei Tve
 					if ( EscreveRestricao == 1){
 						cout << " - BigM * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] )";
 						cout << " + TPvi[" << vAux << "][" << e << "][" << i << "] + TPp[" << p << "]";
-						cout << "+ Dpe[" << p << "][" << e << "] <= ";
+						cout << "+ TEMpe[" << p << "][" << e << "] <= ";
 						cout << " Tvi[" << vAux << "][" << e << "][" << i << "] " << endl;
 					}
-					BigMauternativo = TmaxP[p] + TempoPodePostergarPlanta[p] + TPp[p] + Dpe[p][e]; // M2
-					model.add( - BigMauternativo  * ( 1 - Alfa[vAux][e][i] ) + TPvei[vAux][e][i] + TPp[p] + Dpe[p][e] <= Tvei[vAux][e][i] );
+					BigMauternativo = TmaxP[p] + TempoPodePostergarPlanta[p] + TPp[p] + TEMpe[p][e]; // M2
+					model.add( - BigMauternativo  * ( 1 - Alfa[vAux][e][i] ) + TPvei[vAux][e][i] + TPp[p] + TEMpe[p][e] <= Tvei[vAux][e][i] );
 					if ( EscreveRestricao == 1){
 						cout << " BigM * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] )";
 						cout << " + TPvi[" << vAux << "][" << e << "][" << i << "] + TPp[" << p << "]";
-						cout << "+ Dpe[" << p << "][" << e << "] >= ";
+						cout << "+ TEMpe[" << p << "][" << e << "] >= ";
 						cout << " Tvi[" << vAux << "][" << e << "][" << i << "] " << endl;
 					}
 					BigMauternativo = TmaxE[e] + TempoPodePostergarEmpresa[e];	// M3
-					model.add( BigMauternativo  * ( 1 - Alfa[vAux][e][i] ) + TPvei[vAux][e][i] + TPp[p] + Dpe[p][e] >= Tvei[vAux][e][i] );
+					model.add( BigMauternativo  * ( 1 - Alfa[vAux][e][i] ) + TPvei[vAux][e][i] + TPp[p] + TEMpe[p][e] >= Tvei[vAux][e][i] );
 					vAux = vAux + 1;
 				}
 			}
@@ -1353,11 +1354,11 @@ void No::Restricao_LowerBoundZr( TipoZr Zr,TipoTvei Tvei, TipoAlfa Alfa, TipoRoA
 				for (int v = 0; v < TCVP[p]; v++) {
 					if ( EscreveRestricao == 1){
 						cout << " Zr[ " << p << "] >=  Tvei[" << vAux << "][" << e << "][" << i << "] +";
-						cout << " Dep[" << vAux << "][" << e << "][" << i << "] + Dep[" << e << "][" << p << "]";
+						cout << " TEMep[" << vAux << "][" << e << "][" << i << "] + TEMep[" << e << "][" << p << "]";
 						cout << " - BigM * ( 1 - Alfa[" << vAux << "][" << e << "][" << i << "])" << endl;
 					}
-					BigMauternativo = TmaxE[e] + TempoPodePostergarEmpresa[e] + Pvi[vAux][e][i] + Dep[e][p];	// M4
-					model.add( Zr[p] >=  Tvei[vAux][e][i] + Pvi[vAux][e][i] + Dep[e][p] - BigMauternativo * ( 1 - Alfa[vAux][e][i]) );
+					BigMauternativo = TmaxE[e] + TempoPodePostergarEmpresa[e] + Pvi[vAux][e][i] + TEMep[e][p];	// M4
+					model.add( Zr[p] >=  Tvei[vAux][e][i] + Pvi[vAux][e][i] + TEMep[e][p] - BigMauternativo * ( 1 - Alfa[vAux][e][i]) );
 					vAux = vAux + 1;
 				}
 			}
@@ -2070,7 +2071,7 @@ void No::EscreveItinerarioVeiculos( int EscreveNaTelaResultados,int EscreveArqui
 							cout << " e sai as  ";
 							printf("%.2f", ( cplex.getValue(Tvei[vAux][e][i]) + Pvi[vAux][e][i]) );
 							cout << ", retorna a planta as ";
-							printf("%.2f", ( cplex.getValue(Tvei[vAux][e][i]) + Pvi[vAux][e][i] + Dep[e][p] ) );
+							printf("%.2f", ( cplex.getValue(Tvei[vAux][e][i]) + Pvi[vAux][e][i] + TEMep[e][p] ) );
 							cout << endl;
 						}
 						if( EscreveArquivoComRespostas == 1){
@@ -2079,7 +2080,7 @@ void No::EscreveItinerarioVeiculos( int EscreveNaTelaResultados,int EscreveArqui
 							logfile2  << ", sai da planta as " << cplex.getValue(TPvei[vAux][e][i]) + TPp[p] ;
 							logfile2 << ", chega a entrega" << e + 1 << " as " << cplex.getValue(Tvei[vAux][e][i]);
 							logfile2 << " e sai as  " << cplex.getValue(Tvei[vAux][e][i]) + Pvi[vAux][e][i] ;
-							logfile2 << ", retorna a planta as " << cplex.getValue(Tvei[vAux][e][i]) + Pvi[vAux][e][i] + Dep[e][p];
+							logfile2 << ", retorna a planta as " << cplex.getValue(Tvei[vAux][e][i]) + Pvi[vAux][e][i] + TEMep[e][p];
 							logfile2 << endl;
 						}
 					}
@@ -2552,8 +2553,8 @@ No::~No(){
 	CVP.clear();
 	TCDE.clear();
 	CDE.clear();
-	Dpe.clear();
-	Dep.clear();
+	TEMpe.clear();
+	TEMep.clear();
 	Pvi.clear();
 	TPp.clear();
 	Omega.clear();
