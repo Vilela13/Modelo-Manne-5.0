@@ -3161,13 +3161,6 @@ No::~No(){
 	TmaxE.clear();
 	TminP.clear();
 	TmaxP.clear();
-	DESCvi.clear();
-	Teta.clear();
-	Svii.clear();
-	TminE.clear();
-	TmaxE.clear();
-	TminP.clear();
-	TmaxP.clear();
 	Nome1.clear();
 	Nome2.clear();
 	TempoPodeAdiantarEmpresa.clear();
