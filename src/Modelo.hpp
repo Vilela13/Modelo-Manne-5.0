@@ -224,7 +224,7 @@ public:
 
 // Funções que chama o Cplex
 
-    int Cplex(string, int, int&, double&, double&, double&, int&, int&, double&, int&, double&s, double&, double&);
+    int Cplex(string, int, int&, double&, double&, double&, int&, int&, double&, int&, double&s, double&, double&, vector < string > , vector < double >);
 
 // Escrever em diretorio a saída
 
@@ -2830,7 +2830,7 @@ void No::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int EscreveArquiv
 }
 
 // Resolve modelo
-int No::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo){
+int No::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
 
 	int Escreve;				// Escreve variaveis criadas
 
@@ -2988,6 +2988,14 @@ int No::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, doub
 	}
 	cplex->setParam(IloCplex::TiLim,  TempoExecucao);
 	cplex->setParam(IloCplex::Threads, 12);
+
+	for( int i = 0; i < (int) NomeInstanciaLimiteUpper.size(); i++){
+
+		if( Nome.compare(NomeInstanciaLimiteUpper[i].c_str()) == 0){
+			//cout << endl << endl << "		Usou o Limite superior em " << NomeInstanciaLimiteUpper[i] << " no valor de " << ValorLimiteUpper[i] << endl << endl;
+			cplex->setParam(IloCplex::Param::MIP::Tolerances::UpperCutoff, ValorLimiteUpper[i]);
+		}
+	}
 
 	Tempo1 = cplex->getCplexTime();
 

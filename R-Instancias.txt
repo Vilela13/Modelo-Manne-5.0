@@ -120,3 +120,21 @@ Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	
  p-C101-P1C5-I4-V1.txt 	Optimal 	58.056 	 58.056 	 58.056 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 104.973 	 
  p-C101-P1C5-I4-V1.txt 	Optimal 	58.056 	 58.056 	 58.056 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 107.231 	 
  p-C101-P1C5-I4-V1.txt 	Optimal 	58.056 	 58.056 	 58.056 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 116.400 	 
+ * 11:09:34 de 21:06:2016 
+Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
+ Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 1.362 	 
+ Teste3.txt 	Optimal 	53.000 	 53.000 	 53.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 2.129 	 
+ * 11:19:36 de 21:06:2016 
+Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
+ Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 1.552 	 
+ Teste3.txt 	Optimal 	53.000 	 53.000 	 53.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 2.474 	 
+ * 12:48:07 de 21:06:2016 
+Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
+ p-C101-P2C10-I2-V2.txt 	Unknow 	-1.000 	 -1.000 	 -1.000 	 -1 	 -1 	 -1.000 	 -1 	 -1.000 	 -1.000 	 32.592 	 
+ Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 1.440 	 
+ Teste3.txt 	Optimal 	53.000 	 53.000 	 53.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 2.173 	 
+ * 12:49:23 de 21:06:2016 
+Instância 	 Status 	 Solução_Primal 	 Solução_Dual 	 Solução_Com_Atrazo 	 Construcoes_Com_Atrazo 	 Demandas_Afetadas 	 Valor_Atrazo_Construcoes 	 Plantas_Com_Atrazo 	 Valor_Atrazo_Plantas 	 Gap 	 Tempo 
+ p-C101-P2C10-I2-V2.txt 	Unknow 	-1.000 	 -1.000 	 -1.000 	 -1 	 -1 	 -1.000 	 -1 	 -1.000 	 -1.000 	 33.109 	 
+ Teste1.txt 	Optimal 	42.000 	 42.000 	 42.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 1.143 	 
+ Teste3.txt 	Optimal 	53.000 	 53.000 	 53.000 	 0 	 0 	 0.000 	 0 	 0.000 	 0.000 	 2.947 	 

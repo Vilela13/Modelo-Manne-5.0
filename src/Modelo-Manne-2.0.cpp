@@ -53,6 +53,15 @@ int main(int argc, char **argv) {
 		int TempoExecucao;
 
 
+		// Limite superior
+		ifstream UpperBounds;
+		bool TemLimites;
+		vector < string > NomeInstanciaLimiteUpper;
+		string NomeInstanciaUpper;
+		string ValorUpper;
+		vector < double > ValorLimiteUpper;
+		double ValorDoubleUpper;
+
 	//Cria instancia manual
 	    //No PreInstancia;
 
@@ -60,6 +69,38 @@ int main(int argc, char **argv) {
 		//PreInstancia.PreencheEstrutura();
 		//PreInstancia.CriaTXT();
 
+
+
+
+		TemLimites = 0;
+		UpperBounds.open("ValoresLimitesUpper.txt");
+		if ( UpperBounds.is_open() ){
+			TemLimites = 1;
+
+			UpperBounds >> NomeInstanciaUpper;
+			while( NomeInstanciaUpper != "EOF"){
+				//cout << " coloca lista = " << Nome  << endl ;
+				UpperBounds >> ValorUpper;
+				//cout << "   " << NomeInstanciaUpper << " : " << ValorUpper << endl;
+
+				if(ValorUpper.compare("------") == 0 ){
+					//cout << "  Sem resposta" << endl;
+				}else{
+					NomeInstanciaLimiteUpper.push_back(NomeInstanciaUpper);
+					ValorDoubleUpper = atof(ValorUpper.c_str());
+					//cout << "            " << NomeInstanciaUpper << " valor double : " << ValorDoubleUpper << endl;
+					ValorLimiteUpper.push_back(ValorDoubleUpper);
+				}
+				UpperBounds >> NomeInstanciaUpper;
+			}
+		}
+
+		//cout << endl<< endl<< " Passou limites :" << TemLimites << endl<< endl;
+		if( TemLimites == 1){
+			for( int i = 0; i < (int) NomeInstanciaLimiteUpper.size(); i++){
+				//cout << NomeInstanciaLimiteUpper[i] << " => " << ValorLimiteUpper[i] << endl;
+			}
+		}
 
 	// Resolve o problema
 
@@ -148,7 +189,7 @@ int main(int argc, char **argv) {
 
 			if( Instancia->LeDados(Nome, EscreveDadosLidosNaTela) == 1){
 
-				resolveu = Instancia->Cplex(Nome,  TempoExecucao, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes, PlantasComAtrazo, ValorAtrazoPlantas,  Gap, Tempo);
+				resolveu = Instancia->Cplex(Nome,  TempoExecucao, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes, PlantasComAtrazo, ValorAtrazoPlantas,  Gap, Tempo, NomeInstanciaLimiteUpper, ValorLimiteUpper);
 				cout  << " Resolveu = " << resolveu << endl << endl ;
 
 				ArquivoExcelResposta = fopen(Saida.c_str(), "a");
