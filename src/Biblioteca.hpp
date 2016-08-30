@@ -52,5 +52,6 @@ using namespace std;
 
 
 #include "Modelo.hpp"
+#include "ModeloJanelaViolada.hpp"
 
 #endif /* BIBLIOTECA_HPP_ */

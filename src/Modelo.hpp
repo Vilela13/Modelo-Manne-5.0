@@ -52,10 +52,10 @@
 #define TipoRoPPp IloFloatVarArray
 
 
-class No{
+class ClasseModelo{
 
 public:
-    No();                                       // construtora da classe
+    ClasseModelo();                                       // construtora da classe
 /*
  // Escreve arquivo TXT
 
@@ -238,10 +238,10 @@ public:
     double Tempo1;
     double Tempo2;
 
-    ~No();       // Destruidora
+    ~ClasseModelo();       // Destruidora
 };
 
-No::No(){
+ClasseModelo::ClasseModelo(){
 	NP  = 0;
 	NE  = 0;
 	NV  = 0;
@@ -254,7 +254,7 @@ No::No(){
 }
 
 /*
-void No::PreencheEstrutura(){
+void ClasseModelo::PreencheEstrutura(){
 // Coloca o numero de plantas, entregas, veiculos e velocidade
 	NumPlantas 	= NumeroDePlantasVariaveisFixas;
 	NumEntregas = NumeroDeEntregasVariaveisFixas;
@@ -366,7 +366,7 @@ void No::PreencheEstrutura(){
 		TempoFinalPlanta[i] = 16;
 	 }
 }
-void No::CriaTXT(){
+void ClasseModelo::CriaTXT(){
 	ofstream Instancia;
 	Instancia.open("./InstS/T-M-V1.txt");
 cout << "T-M-V1" << endl;
@@ -500,14 +500,14 @@ cout << " Tempo Final Planta " << endl;
 */
 
 // Le dadso da Intância
-void No::LeNomeInstancia(int comentarios, string& Instancia){
+void ClasseModelo::LeNomeInstancia(int comentarios, string& Instancia){
 	arq >> Instancia;
 	if( comentarios == 1){
 		cout << " Nome instancia "<<  Instancia << endl;
 	}
 }
 
-void No::LeNumeroPlantasEntregasVeiculos(int comentarios){
+void ClasseModelo::LeNumeroPlantasEntregasVeiculos(int comentarios){
 	arq >> NP;
 	arq >> NE;
 	arq >> NV;
@@ -518,7 +518,7 @@ void No::LeNumeroPlantasEntregasVeiculos(int comentarios){
 	}
 }
 
-void No::LeVelocidadeTempoVidaConcreto(int comentarios){
+void ClasseModelo::LeVelocidadeTempoVidaConcreto(int comentarios){
 	arq >> Vel;
 	arq >> TVC;
 	if( comentarios == 1){
@@ -527,7 +527,7 @@ void No::LeVelocidadeTempoVidaConcreto(int comentarios){
 	}
 }
 
-void No::LeVeiculoPorPlanta(int comentarios){
+void ClasseModelo::LeVeiculoPorPlanta(int comentarios){
 	if( comentarios == 1){
 		cout << "Conjunto de Veiculos por Planta " << endl;
 	}
@@ -554,7 +554,7 @@ void No::LeVeiculoPorPlanta(int comentarios){
 	}
 }
 
-void No::LeDemandasPorEntrada(int comentarios){
+void ClasseModelo::LeDemandasPorEntrada(int comentarios){
 	if( comentarios == 1){
 		cout << "Conjunto de Demandas por Entrega " << endl;
 	}
@@ -581,7 +581,7 @@ void No::LeDemandasPorEntrada(int comentarios){
 	}
 }
 
-void No::LeDistanciaPlantaEntrada(int comentarios){
+void ClasseModelo::LeDistanciaPlantaEntrada(int comentarios){
 	TEMpe.resize(NP);
 	for(int p = 0; p < NP; p++){
 		TEMpe[p].resize(NE);
@@ -611,7 +611,7 @@ void No::LeDistanciaPlantaEntrada(int comentarios){
 	}
 }
 
-void No::LeDistanciaEntregaPlanta(int comentarios){
+void ClasseModelo::LeDistanciaEntregaPlanta(int comentarios){
 	TEMep.resize(NE);
 	for(int e = 0; e < NE; e++){
 		TEMep[e].resize(NP);
@@ -641,7 +641,7 @@ void No::LeDistanciaEntregaPlanta(int comentarios){
 	}
 }
 
-void No::LeTempoProcessamentoEntrega(int comentarios){
+void ClasseModelo::LeTempoProcessamentoEntrega(int comentarios){
 	int Aux1;
 
 	DESCvi.resize( NV);
@@ -679,7 +679,7 @@ void No::LeTempoProcessamentoEntrega(int comentarios){
 	}
 }
 
-void No::LeTempoCarregamentoPlanta(int comentarios){
+void ClasseModelo::LeTempoCarregamentoPlanta(int comentarios){
 	CARRp.resize(NP );
 	if( comentarios == 1){
 		cout << "Tempo Para Carregamento nas Plantas " << endl;
@@ -695,7 +695,7 @@ void No::LeTempoCarregamentoPlanta(int comentarios){
 	}
 }
 
-void No::LeTempoMaximoEntreEntregasConsecultivas(int comentarios){
+void ClasseModelo::LeTempoMaximoEntreEntregasConsecultivas(int comentarios){
 	Teta.resize(NE);
 	if( comentarios == 1){
 		cout << " Tempo entre chagadas " << endl;
@@ -711,7 +711,7 @@ void No::LeTempoMaximoEntreEntregasConsecultivas(int comentarios){
 	}
 }
 
-void No::CalculaTempoMinimoDeAtendimentoEntreDuasEntregas(int comentarios){
+void ClasseModelo::CalculaTempoMinimoDeAtendimentoEntreDuasEntregas(int comentarios){
 	int Aux2;
 
 	Svii.resize(NV);
@@ -755,7 +755,7 @@ void No::CalculaTempoMinimoDeAtendimentoEntreDuasEntregas(int comentarios){
 }
 
 // le  tempo inicio e final entrada e planta
-void No::LeIntervalosNasEntregas(int comentarios){
+void ClasseModelo::LeIntervalosNasEntregas(int comentarios){
 	TminE.resize(NE);
 	if( comentarios == 1){
 		cout << " Tempo Inicio Entrada " << endl;
@@ -783,7 +783,7 @@ void No::LeIntervalosNasEntregas(int comentarios){
 		cout << endl;
 	}
 }
-void No::LeIntervalosNasPlantas(int comentarios){
+void ClasseModelo::LeIntervalosNasPlantas(int comentarios){
 	 TminP.resize(NP);
 	 if( comentarios == 1){
 		 cout << " Tempo Inicio Planta " << endl;
@@ -813,7 +813,7 @@ void No::LeIntervalosNasPlantas(int comentarios){
 }
 
 // Le dados
-int No::LeDados(string Nome, int comentarios){
+int ClasseModelo::LeDados(string Nome, int comentarios){
 
 	string Instancia;
 	string CaminhoArquivo1;
@@ -852,7 +852,7 @@ int No::LeDados(string Nome, int comentarios){
 }
 
 // Calcula tempos que podem adiantar ou protergar o funcionamento das construções ou plantas
-void No::CalculaTempoPodeAdiantarOuPostergarEmpresa(int Escreve){
+void ClasseModelo::CalculaTempoPodeAdiantarOuPostergarEmpresa(int Escreve){
 	TempoPodeAdiantarEmpresa.resize(NE);
 	TempoPodePostergarEmpresa.resize(NE);
 	for(int e = 0; e < NE; e++ ){
@@ -874,7 +874,7 @@ void No::CalculaTempoPodeAdiantarOuPostergarEmpresa(int Escreve){
 		}
 	}
 }
-void No::CalculaTempoPodeAdiantarOuPostergarPlantas(int Escreve){
+void ClasseModelo::CalculaTempoPodeAdiantarOuPostergarPlantas(int Escreve){
 	TempoPodeAdiantarPlanta.resize(NP);
 	TempoPodePostergarPlanta.resize(NP);
 	for(int p = 0; p < NP; p++ ){
@@ -899,7 +899,7 @@ void No::CalculaTempoPodeAdiantarOuPostergarPlantas(int Escreve){
 // Calcula Penalidades Desrespeito as Janelas De Tempo das Construções e das Plantas
 		// TipoPenalidade => 1 penalidade com o valor maximo da janela de tempo
 		// TipoPenalidade => 2 penalidade com o valor 400
-void No::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa(int TipoPenalidade, int  Escreve){
+void ClasseModelo::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa(int TipoPenalidade, int  Escreve){
 	PenalidadeDesrespeitoJanelaDeTempoEmpresa.resize(NE);
 	double AuxMaiorValor;
 
@@ -928,11 +928,11 @@ void No::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa(int TipoPenalidade, in
 	}
 
 	if( TipoPenalidade != 1 && TipoPenalidade != 2 ){
-		cout << "   **********((((((((  Problema em definir as penalidades das construcoes   -> No::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa ))))))))))************* " << endl;
+		cout << "   **********((((((((  Problema em definir as penalidades das construcoes   -> ClasseModelo::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa ))))))))))************* " << endl;
 	}
 }
 
-void No:: CalculaPenalidadeDesrespeitoJanelaDeTempoPlanta(int TipoPenalidade, int  Escreve){
+void ClasseModelo:: CalculaPenalidadeDesrespeitoJanelaDeTempoPlanta(int TipoPenalidade, int  Escreve){
 	PenalidadeDesrespeitoJanelaDeTempoPlanta.resize(NP);
 	double AuxMaiorValor;
 
@@ -961,13 +961,13 @@ void No:: CalculaPenalidadeDesrespeitoJanelaDeTempoPlanta(int TipoPenalidade, in
 	}
 
 	if( TipoPenalidade != 1 && TipoPenalidade != 2 ){
-		cout << "   **********((((((((  Problema em definir as penalidades das construcoes   -> No::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa ))))))))))************* " << endl;
+		cout << "   **********((((((((  Problema em definir as penalidades das construcoes   -> ClasseModelo::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa ))))))))))************* " << endl;
 	}
 
 }
 
 // Cria Variáveis
-void No::CriaAlfa(TipoAlfa& Alfa, int Escreve){
+void ClasseModelo::CriaAlfa(TipoAlfa& Alfa, int Escreve){
 	char varName[24];
 	for (int v = 0; v < NV; v++) {
 		Alfa[v] = IloArray< IloBoolVarArray>(env, NE);
@@ -987,7 +987,7 @@ void No::CriaAlfa(TipoAlfa& Alfa, int Escreve){
 	}
 }
 
-void No::CriaBeta(TipoBeta& Beta, int Escreve ){
+void ClasseModelo::CriaBeta(TipoBeta& Beta, int Escreve ){
 	char varName[24];
 	for (int v = 0; v < NV; v++) {
 		Beta[v] = IloArray< IloArray< IloArray< IloBoolVarArray> > >(env, NE);
@@ -1021,7 +1021,7 @@ void No::CriaBeta(TipoBeta& Beta, int Escreve ){
 	}
 }
 
-void No::CriaBetaProducao(TipoBeta& BetaProducao, int Escreve ){
+void ClasseModelo::CriaBetaProducao(TipoBeta& BetaProducao, int Escreve ){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
 		BetaProducao[p] = IloArray< IloArray< IloArray< IloBoolVarArray> > >(env, NE);
@@ -1055,7 +1055,7 @@ void No::CriaBetaProducao(TipoBeta& BetaProducao, int Escreve ){
 	}
 }
 
-void No::CriaTvei( TipoTvei& Tvei,int Escreve){
+void ClasseModelo::CriaTvei( TipoTvei& Tvei,int Escreve){
 	char varName[24];
 	for (int v = 0; v < NV; v++) {
 		Tvei[v] = IloArray < IloFloatVarArray >(env,NE);
@@ -1078,7 +1078,7 @@ void No::CriaTvei( TipoTvei& Tvei,int Escreve){
 	}
 }
 
-void No::CriaTPvei( TipoTPvei& TPvei,int Escreve){
+void ClasseModelo::CriaTPvei( TipoTPvei& TPvei,int Escreve){
 	char varName[24];
 	for (int v = 0; v < NV; v++) {
 		TPvei[v] = IloArray < IloFloatVarArray > (env,NV);
@@ -1099,7 +1099,7 @@ void No::CriaTPvei( TipoTPvei& TPvei,int Escreve){
 	}
 }
 
-void No::CriaZe(TipoZe& Ze , int Escreve){
+void ClasseModelo::CriaZe(TipoZe& Ze , int Escreve){
 	char varName[24];
 	for (int e = 0; e < NE; e++) {
 		sprintf(varName, "Ze_%d", e);
@@ -1113,7 +1113,7 @@ void No::CriaZe(TipoZe& Ze , int Escreve){
 	}
 }
 
-void No::CriaZr(TipoZr& Zr , int Escreve ){
+void ClasseModelo::CriaZr(TipoZr& Zr , int Escreve ){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
 		sprintf(varName, "Zr_%d", p);
@@ -1127,7 +1127,7 @@ void No::CriaZr(TipoZr& Zr , int Escreve ){
 	}
 }
 
-void No::CriaAEe(TipoAEe& AEe, int  Escreve){
+void ClasseModelo::CriaAEe(TipoAEe& AEe, int  Escreve){
 	char varName[24];
 	for (int e = 0; e < NE; e++) {
 		sprintf(varName, "AEe_%d", e);
@@ -1142,7 +1142,7 @@ void No::CriaAEe(TipoAEe& AEe, int  Escreve){
 
 }
 
-void No::CriaPEe(TipoPEe& PEe, int  Escreve){
+void ClasseModelo::CriaPEe(TipoPEe& PEe, int  Escreve){
 	char varName[24];
 	for (int e = 0; e < NE; e++) {
 		sprintf(varName, "PEe_%d", e);
@@ -1156,7 +1156,7 @@ void No::CriaPEe(TipoPEe& PEe, int  Escreve){
 	}
 }
 
-void No::CriaAPp(TipoAPp& APp, int Escreve){
+void ClasseModelo::CriaAPp(TipoAPp& APp, int Escreve){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
 		sprintf(varName, "APp_%d", p);
@@ -1170,7 +1170,7 @@ void No::CriaAPp(TipoAPp& APp, int Escreve){
 	}
 }
 
-void No::CriaPPp(TipoPPp& PPp, int Escreve){
+void ClasseModelo::CriaPPp(TipoPPp& PPp, int Escreve){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
 		sprintf(varName, "PPp_%d", p);
@@ -1184,7 +1184,7 @@ void No::CriaPPp(TipoPPp& PPp, int Escreve){
 	}
 }
 
-void No::CriaRoAEe(TipoRoAEe	RoAEe,int Escreve){
+void ClasseModelo::CriaRoAEe(TipoRoAEe	RoAEe,int Escreve){
 	char varName[24];
 	for (int e = 0; e < NE; e++) {
 		sprintf(varName, "RoAEe_%d", e);
@@ -1199,7 +1199,7 @@ void No::CriaRoAEe(TipoRoAEe	RoAEe,int Escreve){
 
 }
 
-void No::CriaRoPEe(TipoRoPEe	RoPEe,int Escreve){
+void ClasseModelo::CriaRoPEe(TipoRoPEe	RoPEe,int Escreve){
 	char varName[24];
 	for (int e = 0; e < NE; e++) {
 		sprintf(varName, "RoPEe_%d", e);
@@ -1213,7 +1213,7 @@ void No::CriaRoPEe(TipoRoPEe	RoPEe,int Escreve){
 	}
 }
 
-void No::CriaRoAPp(TipoRoAPp	RoAPp,int Escreve){
+void ClasseModelo::CriaRoAPp(TipoRoAPp	RoAPp,int Escreve){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
 		sprintf(varName, "RoAPp_%d", p);
@@ -1227,7 +1227,7 @@ void No::CriaRoAPp(TipoRoAPp	RoAPp,int Escreve){
 	}
 }
 
-void No::CriaRoPPp(TipoRoPPp	RoPPp,int Escreve){
+void ClasseModelo::CriaRoPPp(TipoRoPPp	RoPPp,int Escreve){
 	char varName[24];
 	for (int p = 0; p < NP; p++) {
 		sprintf(varName, "RoPPp_%d", p);
@@ -1242,7 +1242,7 @@ void No::CriaRoPPp(TipoRoPPp	RoPPp,int Escreve){
 }
 
 // Função Objetivo
-void No::FuncaoObjetivo(TipoZe Ze, TipoZr Zr, TipoRoAEe RoAEe, TipoRoPEe RoPEe, TipoRoAPp RoAPp, TipoRoPPp RoPPp, IloModel& model, int Imprime){
+void ClasseModelo::FuncaoObjetivo(TipoZe Ze, TipoZr Zr, TipoRoAEe RoAEe, TipoRoPEe RoPEe, TipoRoAPp RoAPp, TipoRoPPp RoPPp, IloModel& model, int Imprime){
 	int Ativo;
 	Ativo = 0;
 	if ( Imprime == 1){
@@ -1281,7 +1281,7 @@ void No::FuncaoObjetivo(TipoZe Ze, TipoZr Zr, TipoRoAEe RoAEe, TipoRoPEe RoPEe, 
 
 // Restrições
 	// restrição 1
-void No::Restricao_AtendimentoDasDemandas(TipoAlfa Alfa, IloModel& model, int Escreve){
+void ClasseModelo::Restricao_AtendimentoDasDemandas(TipoAlfa Alfa, IloModel& model, int Escreve){
 	IloRangeArray Restricao1Demandas;
 	char varName[20];
 
@@ -1326,7 +1326,7 @@ void No::Restricao_AtendimentoDasDemandas(TipoAlfa Alfa, IloModel& model, int Es
 	}
 }
 	// restrição 2
-void No::Restricao_LowerBoundZe(TipoZe Ze, TipoTvei Tvei, TipoAlfa Alfa, IloModel& model, int Escreve){
+void ClasseModelo::Restricao_LowerBoundZe(TipoZe Ze, TipoTvei Tvei, TipoAlfa Alfa, IloModel& model, int Escreve){
 	float BigMauternativo;
 	IloRangeArray Restricao2;
 	char varName[40];
@@ -1378,7 +1378,7 @@ void No::Restricao_LowerBoundZe(TipoZe Ze, TipoTvei Tvei, TipoAlfa Alfa, IloMode
 	}
 }
 	// restrição 3 e 4
-void No::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, TipoTvei Tvei,IloModel& model, int EscreveRestricao ){
+void ClasseModelo::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, TipoTvei Tvei,IloModel& model, int EscreveRestricao ){
 	int vAux;
 	float BigMauternativo;
 	IloRangeArray Restricao3;
@@ -1463,7 +1463,7 @@ void No::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, TipoTvei Tve
 	}
 }
 	// restrição 5 e 6
-void No::Restricao_LowerBoundZr( TipoZr Zr,TipoTvei Tvei, TipoAlfa Alfa, TipoRoAPp RoAPp, IloModel& model, int EscreveRestricao){
+void ClasseModelo::Restricao_LowerBoundZr( TipoZr Zr,TipoTvei Tvei, TipoAlfa Alfa, TipoRoAPp RoAPp, IloModel& model, int EscreveRestricao){
 	int vAux;
 	float BigMauternativo;
 	IloRangeArray Restricao5;
@@ -1547,7 +1547,7 @@ void No::Restricao_LowerBoundZr( TipoZr Zr,TipoTvei Tvei, TipoAlfa Alfa, TipoRoA
 
 
 	// restrição 7 e 8
-void No::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTvei Tvei, IloModel& model, int EscrveRestricao1, int EscreveRestricao2){
+void ClasseModelo::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTvei Tvei, IloModel& model, int EscrveRestricao1, int EscreveRestricao2){
 	float BigMauternativo;
 	IloRangeArray Restricao7;
 	IloRangeArray Restricao8;
@@ -1641,7 +1641,7 @@ void No::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTvei Tvei, I
 	}
 }
 	// restrição 9
-void No::Restricao_TempoMaximoEntreDescarregamentosSeguidosNaMesmaEntrega( TipoAlfa Alfa,TipoTvei Tvei, IloModel& model, int EscreveRestricao ){
+void ClasseModelo::Restricao_TempoMaximoEntreDescarregamentosSeguidosNaMesmaEntrega( TipoAlfa Alfa,TipoTvei Tvei, IloModel& model, int EscreveRestricao ){
 	float BigMauternativo;
 	IloRangeArray Restricao9;
 	char varName[40];
@@ -1706,7 +1706,7 @@ void No::Restricao_TempoMaximoEntreDescarregamentosSeguidosNaMesmaEntrega( TipoA
 	}
 }
 	// restrição 10
-void No::Restricao_TempoMinimoEntreDescarregamentosSeguidosNaMesmaEntrega(TipoAlfa Alfa, TipoTvei Tvei, IloModel& model, int EscreveRestricao ){
+void ClasseModelo::Restricao_TempoMinimoEntreDescarregamentosSeguidosNaMesmaEntrega(TipoAlfa Alfa, TipoTvei Tvei, IloModel& model, int EscreveRestricao ){
 	 float BigMauternativo;
 	IloRangeArray Restricao10;
 	char varName[40];
@@ -1770,7 +1770,7 @@ void No::Restricao_TempoMinimoEntreDescarregamentosSeguidosNaMesmaEntrega(TipoAl
 	}
 }
 	// restrição 11 e 12
-void No::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProducao,TipoTPvei TPvei, IloModel& model, int EscreveRestricao1, int EscreveRestricao2){
+void ClasseModelo::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProducao,TipoTPvei TPvei, IloModel& model, int EscreveRestricao1, int EscreveRestricao2){
 	float BigMauternativo;
 	int v1Aux;
 	int v2Aux;
@@ -1887,7 +1887,7 @@ void No::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProducao,TipoTPv
 	}
 }
 	// restrição 13
-void No::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa,TipoTvei Tvei, TipoTPvei TPvei, IloModel& model, int EscreveRestricao){
+void ClasseModelo::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa,TipoTvei Tvei, TipoTPvei TPvei, IloModel& model, int EscreveRestricao){
 	float BigMauternativo;
 	int vAux;
 	IloRangeArray Restricao13;
@@ -1941,7 +1941,7 @@ void No::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa,TipoTvei Tvei, TipoTPvei
 
 }
 	// restrição 14 e 15
-void No::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAEe AEe,TipoPEe PEe, IloModel& model, int EscreveRestricao){
+void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAEe AEe,TipoPEe PEe, IloModel& model, int EscreveRestricao){
 	IloRangeArray Restricao14;
 	IloRangeArray Restricao15;
 	char varName[40];
@@ -2001,7 +2001,7 @@ void No::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAEe AEe,TipoPEe PE
 	}
 }
 	// restrição 16 e 17
-void No::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei, TipoAPp APp, TipoPPp PPp, IloModel& model, int EscreveRestricao ){
+void ClasseModelo::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei, TipoAPp APp, TipoPPp PPp, IloModel& model, int EscreveRestricao ){
 	int vAux;
 	IloRangeArray Restricao16;
 	IloRangeArray Restricao17;
@@ -2067,7 +2067,7 @@ void No::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei, TipoAPp APp, TipoPPp P
 	}
 }
 	// restrição 18 e 19
-void No::Restricao_AtribuiValorRoAEePEe( TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe, IloModel& model, int EscreveRestricao ){
+void ClasseModelo::Restricao_AtribuiValorRoAEePEe( TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe, IloModel& model, int EscreveRestricao ){
 	IloRangeArray Restricao18;
 	IloRangeArray Restricao19;
 	char varName[40];
@@ -2110,7 +2110,7 @@ void No::Restricao_AtribuiValorRoAEePEe( TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe P
 	}
 }
 	// Restrição  20 e 21
-void No::Restricao_AtribuiValorRoAPpPPp( TipoAPp APp, TipoRoAPp RoAPp, TipoPPp PPp, TipoRoPPp RoPPp, IloModel& model, int EscreveRestricao ){
+void ClasseModelo::Restricao_AtribuiValorRoAPpPPp( TipoAPp APp, TipoRoAPp RoAPp, TipoPPp PPp, TipoRoPPp RoPPp, IloModel& model, int EscreveRestricao ){
 	IloRangeArray Restricao20;
 	IloRangeArray Restricao21;
 	char varName[40];
@@ -2153,7 +2153,7 @@ void No::Restricao_AtribuiValorRoAPpPPp( TipoAPp APp, TipoRoAPp RoAPp, TipoPPp P
 	}
 }
 // Dominio Variaveis AEe e PEe ( restrição 22 e 23 )
-void No::DominioAEePEe( TipoAEe AEe, TipoPEe PEe, IloModel& model, int EscreveRestricao ){
+void ClasseModelo::DominioAEePEe( TipoAEe AEe, TipoPEe PEe, IloModel& model, int EscreveRestricao ){
 	IloRangeArray Restricao22;
 	IloRangeArray Restricao23;
 	char varName[40];
@@ -2193,7 +2193,7 @@ void No::DominioAEePEe( TipoAEe AEe, TipoPEe PEe, IloModel& model, int EscreveRe
 	}
 }
 // Dominio Variaveis APp e PPp  ( restrição 24 e 25 )
-void No::DominioAPpPPp( TipoAPp APp, TipoPPp PPp, IloModel& model, int EscreveRestricao ){
+void ClasseModelo::DominioAPpPPp( TipoAPp APp, TipoPPp PPp, IloModel& model, int EscreveRestricao ){
 	IloRangeArray Restricao24;
 	IloRangeArray Restricao25;
 	char varName[40];
@@ -2232,7 +2232,7 @@ void No::DominioAPpPPp( TipoAPp APp, TipoPPp PPp, IloModel& model, int EscreveRe
 }
 
 // Cria pastas
-void No::VerificaOuCriaPastaOut(int EscreveNaTelaResultados){
+void ClasseModelo::VerificaOuCriaPastaOut(int EscreveNaTelaResultados){
 	DIR* dp1;
 
 	dp1 = opendir ("Out");
@@ -2264,7 +2264,7 @@ void No::VerificaOuCriaPastaOut(int EscreveNaTelaResultados){
 	}
 	closedir( dp1 );
 }
-void No::VerificaOuCriaPastaSol(int EscreveNaTelaResultados){
+void ClasseModelo::VerificaOuCriaPastaSol(int EscreveNaTelaResultados){
 	DIR* dp1;
 
 	dp1 = opendir ("Sol");
@@ -2298,7 +2298,7 @@ void No::VerificaOuCriaPastaSol(int EscreveNaTelaResultados){
 }
 
 // Escreve variáveis
-void No::EscreveVariaveisAlfaDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa){
+void ClasseModelo::EscreveVariaveisAlfaDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa){
 	for (int v = 0; v< NV; v++) {
 		if( EscreveArquivoComRespostas == 1){
 			logfile2 << " Veiculo " << v << endl;
@@ -2324,7 +2324,7 @@ void No::EscreveVariaveisAlfaDoModeloAposResolucao(int EscreveArquivoComResposta
 		}
 	}
 }
-void No::EscreveVariaveisBetaDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoBeta Beta ){
+void ClasseModelo::EscreveVariaveisBetaDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoBeta Beta ){
 	for (int v = 0; v< NV; v++) {
 		if( EscreveNaTelaResultados == 1){
 			cout << " Veiculo " << v << endl;
@@ -2362,7 +2362,7 @@ void No::EscreveVariaveisBetaDoModeloAposResolucao(int EscreveArquivoComResposta
 		}
 	}
 }
-void No::EscreveVariaveisBetaProducaoDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoBeta BetaProducao ){
+void ClasseModelo::EscreveVariaveisBetaProducaoDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoBeta BetaProducao ){
 	for (int p = 0; p < NP; p++) {
 		if( EscreveNaTelaResultados == 1){
 			cout << " Planta " << p << endl;
@@ -2400,7 +2400,7 @@ void No::EscreveVariaveisBetaProducaoDoModeloAposResolucao(int EscreveArquivoCom
 		}
 	}
 }
-void No::EscreveVariaveisTveiDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoTvei Tvei){
+void ClasseModelo::EscreveVariaveisTveiDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoTvei Tvei){
 	for (int v = 0; v < NV; v++) {
 		if( EscreveArquivoComRespostas == 1){
 			logfile2 << " Veiculo " << v << endl;
@@ -2426,7 +2426,7 @@ void No::EscreveVariaveisTveiDoModeloAposResolucao(int EscreveArquivoComResposta
 		}
 	}
 }
-void No::EscreveVariaveisTPveiDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoTPvei TPvei ){
+void ClasseModelo::EscreveVariaveisTPveiDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoTPvei TPvei ){
 	int vAux;
 	vAux = 0;
 	for (int p = 0; p < NP; p++) {
@@ -2457,7 +2457,7 @@ void No::EscreveVariaveisTPveiDoModeloAposResolucao(int EscreveArquivoComRespost
 		}
 	}
 }
-void No::EscreveVariaveisZeDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, IloFloatVarArray Ze ){
+void ClasseModelo::EscreveVariaveisZeDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, IloFloatVarArray Ze ){
 	for (int e = 0; e < NE; e++) {
 		for( int i = 0; i < TCDE[e]; i++){
 			if( EscreveNaTelaResultados == 1){
@@ -2477,7 +2477,7 @@ void No::EscreveVariaveisZeDoModeloAposResolucao(int EscreveArquivoComRespostas,
 	}
 
 }
-void No::EscreveVariaveisZrDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, IloFloatVarArray Zr ){
+void ClasseModelo::EscreveVariaveisZrDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, IloFloatVarArray Zr ){
 	for (int p = 0; p < NP; p++) {
 		if( EscreveNaTelaResultados == 1){
 			cout << Zr[p].getName() << " [" << cplex.getValue(Zr[p]) << "]  "<< endl;
@@ -2495,7 +2495,7 @@ void No::EscreveVariaveisZrDoModeloAposResolucao(int EscreveArquivoComRespostas,
 	}
 }
 
-void No::EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe ){
+void ClasseModelo::EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe ){
 	if( EscreveNaTelaResultados == 1){
 		cout << " Construcoes " << endl;
 	}
@@ -2543,7 +2543,7 @@ void No::EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposResolucao(int EscreveArquiv
 	}
 
 }
-void No::EscreveVariaveisAPpRoAPpPPpRoPPpDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoAPp APp, TipoRoAPp RoAPp, TipoPPp PPp, TipoRoPPp RoPPp ){
+void ClasseModelo::EscreveVariaveisAPpRoAPpPPpRoPPpDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoAPp APp, TipoRoAPp RoAPp, TipoPPp PPp, TipoRoPPp RoPPp ){
 	if( EscreveNaTelaResultados == 1){
 		cout << " Plantas " << endl;
 	}
@@ -2593,7 +2593,7 @@ void No::EscreveVariaveisAPpRoAPpPPpRoPPpDoModeloAposResolucao(int EscreveArquiv
 }
 
 // Calcula Função Objetivo Real
-void No::CalculaFuncaoObjetivo(  IloCplex cplex, IloFloatVarArray Ze,  IloFloatVarArray Zr, double& ValorRealFuncaoObjetivo){
+void ClasseModelo::CalculaFuncaoObjetivo(  IloCplex cplex, IloFloatVarArray Ze,  IloFloatVarArray Zr, double& ValorRealFuncaoObjetivo){
 	ValorRealFuncaoObjetivo = 0;
 	for( int e = 0; e < NE; e++){
 		ValorRealFuncaoObjetivo = ValorRealFuncaoObjetivo + cplex.getValue(Ze[e]);
@@ -2603,7 +2603,7 @@ void No::CalculaFuncaoObjetivo(  IloCplex cplex, IloFloatVarArray Ze,  IloFloatV
 	}
 }
 
-void No::CalculaEntregasComAtrazo(  IloCplex cplex, TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes){
+void ClasseModelo::CalculaEntregasComAtrazo(  IloCplex cplex, TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes){
 	ValorAtrazoConstrucoes = 0;
 	ConstrucoesComAtrazo = 0;
 	DemandasAfetadas = 0;
@@ -2621,7 +2621,7 @@ void No::CalculaEntregasComAtrazo(  IloCplex cplex, TipoAEe AEe, TipoRoAEe RoAEe
 	}
 }
 
-void No::CalculaPlantasComAtrazo(  IloCplex cplex, TipoAPp APp, TipoRoAPp RoAPp, TipoPPp PPp, TipoRoPPp RoPPp, int& PlantasComAtrazo, double& ValorAtrazoPlantas){
+void ClasseModelo::CalculaPlantasComAtrazo(  IloCplex cplex, TipoAPp APp, TipoRoAPp RoAPp, TipoPPp PPp, TipoRoPPp RoPPp, int& PlantasComAtrazo, double& ValorAtrazoPlantas){
 	ValorAtrazoPlantas = 0;
 	PlantasComAtrazo = 0;
 	for( int p = 0; p < NP; p++){
@@ -2638,7 +2638,7 @@ void No::CalculaPlantasComAtrazo(  IloCplex cplex, TipoAPp APp, TipoRoAPp RoAPp,
 }
 
 // Escreve a Solução
-void No::EscreveItinerarioVeiculos( int EscreveNaTelaResultados,int EscreveArquivoComRespostas, ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa, TipoTvei Tvei, TipoTPvei TPvei){
+void ClasseModelo::EscreveItinerarioVeiculos( int EscreveNaTelaResultados,int EscreveArquivoComRespostas, ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa, TipoTvei Tvei, TipoTPvei TPvei){
 	int vAux;
 
 	vAux = 0;
@@ -2688,7 +2688,7 @@ void No::EscreveItinerarioVeiculos( int EscreveNaTelaResultados,int EscreveArqui
 		}
 	}
 }
-void No::EscreveEntregasNosClientes(int EscreveNaTelaResultados,int EscreveArquivoComRespostas, ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa, TipoTvei Tvei){
+void ClasseModelo::EscreveEntregasNosClientes(int EscreveNaTelaResultados,int EscreveArquivoComRespostas, ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa, TipoTvei Tvei){
 	int vAux;
 	if( EscreveNaTelaResultados == 1){
 		cout << endl << endl;
@@ -2744,7 +2744,7 @@ void No::EscreveEntregasNosClientes(int EscreveNaTelaResultados,int EscreveArqui
 		}
 	}
 }
-void No::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int EscreveArquivoComRespostas, ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa, TipoTvei Tvei){
+void ClasseModelo::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int EscreveArquivoComRespostas, ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa, TipoTvei Tvei){
 	int vAux;
 	int UsouCaminhao;
 	int AtendeCliente;
@@ -2830,7 +2830,7 @@ void No::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int EscreveArquiv
 }
 
 // Resolve modelo
-int No::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
+int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
 
 	int Escreve;				// Escreve variaveis criadas
 
@@ -3151,7 +3151,7 @@ int No::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, doub
 	}
 }
 
-No::~No(){
+ClasseModelo::~ClasseModelo(){
 
 
 

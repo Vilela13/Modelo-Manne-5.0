@@ -4,8 +4,8 @@ MIP Presolve modified 64 coefficients.
 Aggregator did 6 substitutions.
 Reduced MIP has 452 rows, 132 columns, and 2000 nonzeros.
 Reduced MIP has 94 binaries, 0 generals, 0 SOSs, and 0 indicators.
-Presolve time = 0.00 sec. (1.32 ticks)
-Found incumbent of value 6.0000017e+08 after 0.01 sec. (2.98 ticks)
+Presolve time = 0.01 sec. (1.32 ticks)
+Found incumbent of value 6.0000017e+08 after 0.02 sec. (2.98 ticks)
 Probing time = 0.00 sec. (0.17 ticks)
 Cover probing fixed 0 vars, tightened 4 bounds.
 Tried aggregator 1 time.
@@ -42,7 +42,7 @@ Root relaxation solution time = 0.00 sec. (0.58 ticks)
 *     0+    0                           43.0000       31.0000      169   27.91%
 *     0+    0                           42.0000       31.0000      169   26.19%
       0     0        cutoff             42.0000       42.0000      169    0.00%
-Elapsed time = 1.14 sec. (28.29 ticks, tree = 0.00 MB, solutions = 7)
+Elapsed time = 1.05 sec. (28.29 ticks, tree = 0.00 MB, solutions = 7)
 
 Clique cuts applied:  2
 Implied bound cuts applied:  19
@@ -51,10 +51,10 @@ Mixed integer rounding cuts applied:  8
 Zero-half cuts applied:  1
 
 Root node processing (before b&c):
-  Real time             =    1.14 sec. (28.30 ticks)
+  Real time             =    1.05 sec. (28.30 ticks)
 Parallel b&c, 12 threads:
   Real time             =    0.00 sec. (0.00 ticks)
   Sync time (average)   =    0.00 sec.
   Wait time (average)   =    0.00 sec.
                           ------------
-Total (root+branch&cut) =    1.14 sec. (28.30 ticks)
+Total (root+branch&cut) =    1.05 sec. (28.30 ticks)
