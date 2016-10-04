@@ -37,7 +37,6 @@
 #define TipoTPvei IloArray < IloArray < IloFloatVarArray > >
 
 #define TipoZe IloFloatVarArray
-#define TipoZr IloFloatVarArray
 
 
 
@@ -134,14 +133,13 @@ public:
 
 	vector< double >	TempoPodeAdiantarEmpresa;
 	vector< double >	TempoPodePostergarEmpresa;
-	vector< double >	TempoPodeAdiantarPlanta;
-	vector< double >	TempoPodePostergarPlanta;
+
 
 
 // Calcula tempos que podem adiantar ou protergar o funcionamento das construções ou plantas
 
 	void CalculaTempoPodeAdiantarOuPostergarEmpresa(int);
-	void CalculaTempoPodeAdiantarOuPostergarPlantas(int);
+
 
 
 // Variaveis do CPLEX
@@ -154,18 +152,17 @@ public:
 	void CriaTvei( TipoTvei& ,int);
 	void CriaTPvei( TipoTPvei&,int);
 	void CriaZe(TipoZe&, int);
-	void CriaZr(TipoZr&, int);
+
 
 
 
 // Funções Objetivo
-	void FuncaoObjetivo(TipoZe, TipoZr, IloModel&, int);
+	void FuncaoObjetivo(TipoZe,  IloModel&, int);
 //Restrições
 	void Restricao_AtendimentoDasDemandas(TipoAlfa, IloModel&, int );
 	void Restricao_LowerBoundZe(TipoZe, TipoTvei, TipoAlfa , IloModel&, int );
 	void Restricao_VinculoTveiTPvei(TipoAlfa, TipoTPvei, TipoTvei,IloModel&, int);
 
-	void Restricao_LowerBoundZr( TipoZr, TipoTvei, TipoAlfa, IloModel&, int);
 
 	void Restricao_PrecedenciaTvei( TipoAlfa ,TipoBeta, TipoTvei, IloModel&, int , int );
 	void Restricao_TempoMaximoEntreDescarregamentosSeguidosNaMesmaEntrega( TipoAlfa ,TipoTvei, IloModel&, int);
@@ -186,10 +183,9 @@ public:
 	void EscreveVariaveisTveiDoModeloAposResolucao(int, int, ofstream&, IloCplex, TipoTvei);
 	void EscreveVariaveisTPveiDoModeloAposResolucao(int, int, ofstream&, IloCplex, TipoTPvei);
 	void EscreveVariaveisZeDoModeloAposResolucao(int, int, ofstream&, IloCplex, TipoZe);
-	void EscreveVariaveisZrDoModeloAposResolucao(int , int ,ofstream&, IloCplex, TipoZr);
 
 
-	void CalculaFuncaoObjetivo( IloCplex, IloFloatVarArray, IloFloatVarArray, double&);
+	void CalculaFuncaoObjetivo( IloCplex, IloFloatVarArray,  double&);
 
 
 	void EscreveItinerarioVeiculos(int, int, ofstream&, IloCplex, TipoAlfa, TipoTvei, TipoTPvei);
@@ -199,7 +195,7 @@ public:
 
 // Funções que chama o Cplex
 
-    int Cplex(string, int, int&, double&, double&, double&, int&, int&, double&, int&, double&s, double&, double&, vector < string > , vector < double >);
+    int Cplex(string, int, int&, double&, double&, double&, int&, int&, double&, double&, double&, vector < string > , vector < double >);
 
 // Escrever em diretorio a saída
 
@@ -839,19 +835,6 @@ void ClasseModelo::CalculaTempoPodeAdiantarOuPostergarEmpresa(int Escreve){
 		}
 	}
 }
-void ClasseModelo::CalculaTempoPodeAdiantarOuPostergarPlantas(int Escreve){
-	TempoPodeAdiantarPlanta.resize(NP);
-	TempoPodePostergarPlanta.resize(NP);
-	for(int p = 0; p < NP; p++ ){
-		TempoPodeAdiantarPlanta[p] = 0;
-		TempoPodePostergarPlanta[p] = 0;
-		if(Escreve == 1){
-			cout << " Planta[" << p << "] tempo que pode adiantar => " << TempoPodeAdiantarPlanta[p] ;
-			cout << " tempo que pode postergar => " << TempoPodePostergarPlanta[p] << endl;
-		}
-	}
-}
-
 
 
 // Cria Variáveis
@@ -1001,22 +984,10 @@ void ClasseModelo::CriaZe(TipoZe& Ze , int Escreve){
 	}
 }
 
-void ClasseModelo::CriaZr(TipoZr& Zr , int Escreve ){
-	char varName[24];
-	for (int p = 0; p < NP; p++) {
-		sprintf(varName, "Zr_%d", p);
-		Zr[p] = IloFloatVar(env,varName);
-		if ( Escreve == 1){
-			cout << " Z_Retorno["<< p << "] "<< endl;
-		}
-	}
-	if ( Escreve == 1){
-		cout << endl;
-	}
-}
+
 
 // Função Objetivo
-void ClasseModelo::FuncaoObjetivo(TipoZe Ze, TipoZr Zr,  IloModel& model, int Imprime){
+void ClasseModelo::FuncaoObjetivo(TipoZe Ze,   IloModel& model, int Imprime){
 	int Ativo;
 	Ativo = 0;
 	if ( Imprime == 1){
@@ -1030,16 +1001,6 @@ void ClasseModelo::FuncaoObjetivo(TipoZe Ze, TipoZr Zr,  IloModel& model, int Im
 				cout << "+";
 			}
 			cout << " Ze[" << e << "]  ";
-			Ativo = 1;
-		}
-	}
-	for (int p = 0; p < NP; p++) {
-		funcao_objetivo += Zr[p];
-		if ( Imprime == 1){
-			if( Ativo == 1){
-				cout << "+";
-			}
-			cout << " Zr[" << p << "]";
 			Ativo = 1;
 		}
 	}
@@ -1190,7 +1151,7 @@ void ClasseModelo::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, Ti
 						cout << "+ TEMpe[" << p << "][" << e << "] <= ";
 						cout << " Tvi[" << vAux << "][" << e << "][" << i << "] " << endl;
 					}
-					BigMauternativo = TmaxP[p] + TempoPodePostergarPlanta[p] + CARRp[p] + TEMpe[p][e]; // M2
+					BigMauternativo = TmaxP[p]  + CARRp[p] + TEMpe[p][e]; // M2
 
 					expr1 += - BigMauternativo  * ( 1 - Alfa[vAux][e][i] ) + TPvei[vAux][e][i] + CARRp[p] + TEMpe[p][e] - Tvei[vAux][e][i];
 
@@ -1234,88 +1195,7 @@ void ClasseModelo::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, Ti
 		}
 	}
 }
-	// restrição 5 e 6
-void ClasseModelo::Restricao_LowerBoundZr( TipoZr Zr,TipoTvei Tvei, TipoAlfa Alfa, IloModel& model, int EscreveRestricao){
-	int vAux;
-	float BigMauternativo;
-	IloRangeArray Restricao5;
-	char varName[40];
 
-	int NumAux;
-	NumAux = 0;
-
-	for (int e = 0; e < NE; e++) {
-		for (int i = 0; i < TCDE[e]; i++) {
-			vAux = 0;
-			for (int p = 0; p < NP; p++) {
-				for (int v = 0; v < TCVP[p]; v++) {
-					NumAux++;
-				}
-			}
-		}
-	}
-
-	Restricao5 = IloRangeArray(env, NumAux);
-	NumAux = 0;
-
-
-	for (int e = 0; e < NE; e++) {
-		for (int i = 0; i < TCDE[e]; i++) {
-			vAux = 0;
-			for (int p = 0; p < NP; p++) {
-				for (int v = 0; v < TCVP[p]; v++) {
-					if ( EscreveRestricao == 1){
-						cout << " Zr[ " << p << "] >=  Tvei[" << vAux << "][" << e << "][" << i << "] +";
-						cout << " TEMep[" << vAux << "][" << e << "][" << i << "] + TEMep[" << e << "][" << p << "]";
-						cout << " - BigM * ( 1 - Alfa[" << vAux << "][" << e << "][" << i << "])" << endl;
-					}
-					BigMauternativo = TmaxE[e] + TempoPodePostergarEmpresa[e] + DESCvi[vAux][e][i] + TEMep[e][p];	// M4
-
-					// declara expressão
-					IloExpr expr1(env);
-
-					expr1 += Tvei[vAux][e][i] + DESCvi[vAux][e][i] + TEMep[e][p] - BigMauternativo * ( 1 - Alfa[vAux][e][i]) - Zr[p];
-					Restricao5[NumAux] = expr1 <= 0;
-
-					sprintf(varName,"Rest5_LimInfZr_p%dv%de%di%d",p,vAux, e, i);
-					Restricao5[NumAux].setName(varName);
-
-					model.add(Restricao5[NumAux]);
-
-					expr1.end();
-
-					//model.add( Zr[p] >=  Tvei[vAux][e][i] + DESCvi[vAux][e][i] + TEMep[e][p] - BigMauternativo * ( 1 - Alfa[vAux][e][i]) );
-					vAux = vAux + 1;
-					NumAux++;
-				}
-			}
-		}
-	}
-
-	IloRangeArray Restricao6;
-
-	Restricao6 = IloRangeArray(env, NP);
-
-	for (int p = 0; p < NP; p++) {
-		if ( EscreveRestricao == 1){
-			cout << " Zr[ " << p << "] >=  TminP[" << p <<"]   " << endl;
-		}
-		// declara expressão
-		IloExpr expr2(env);
-		expr2 +=   TminP[p]  - Zr[p];
-		Restricao6[p] = expr2 <= 0;
-
-		sprintf(varName,"Rest6_LimInfZr_p%d",p);
-		Restricao6[p].setName(varName);
-
-		model.add(Restricao6[p]);
-
-		expr2.end();
-
-		//model.add( Zr[p] >=  TminP[p] - TempoPodeAdiantarPlanta[p] * RoAPp[p]);
-	}
-
-}
 
 
 	// restrição 7 e 8
@@ -1613,7 +1493,7 @@ void ClasseModelo::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProduc
 										cout << " + TPvei'[" << v2Aux << "][" << e2 << "][" << j << "] >=";
 										cout << " TPvei[" << v1Aux << "][" << e1 << "][" << i << "] +  CARRp[" << p << "] " << endl;
 									}
-									BigMauternativo = TmaxP[p] + TempoPodePostergarPlanta[p] + CARRp[p];			// M9
+									BigMauternativo = TmaxP[p]  + CARRp[p];			// M9
 
 									expr1 += BigMauternativo  * ( 1 - Alfa[v1Aux][e1][i] ) + BigMauternativo  * ( 1 - Alfa[v2Aux][e2][j] ) + BigMauternativo * ( 1 - BetaProducao[p][e1][i][e2][j] )  + TPvei[v2Aux][e2][j] - TPvei[v1Aux][e1][i] -  CARRp[p];
 									Restricao11[NumAux] = expr1 >= 0;
@@ -1632,7 +1512,7 @@ void ClasseModelo::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProduc
 										cout << " + TPvei[" << v1Aux << "][" << e1 << "][" << i << "] >=";
 										cout << " TPvei'[" << v2Aux << "][" << e2 << "][" << j << "] + CARRp[" << p << "]" << endl;
 									}
-									BigMauternativo = TmaxP[p] + TempoPodePostergarPlanta[p] + CARRp[p];			// M9
+									BigMauternativo = TmaxP[p]  + CARRp[p];			// M9
 
 									expr2 += BigMauternativo  * ( 1 - Alfa[v1Aux][e1][i]) + BigMauternativo  * ( 1 - Alfa[v2Aux][e2][j]) + BigMauternativo  * BetaProducao[p][e1][i][e2][j]  + TPvei[v1Aux][e1][i] - TPvei[v2Aux][e2][j] - CARRp[p];
 									Restricao12[NumAux] = expr2 >= 0;
@@ -1690,7 +1570,7 @@ void ClasseModelo::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa,TipoTvei Tvei,
 						cout << " Tvi[" << vAux << "][" << e << "][" << i << "] - TDESCvi[" << vAux << "][" << e << "][" << i << "] ";
 						cout << " -  BigM * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] ) <= " << TVC << endl;
 					}
-					BigMauternativo = TmaxE[e] + TempoPodePostergarEmpresa[e] - ( TminP[p] - TempoPodeAdiantarPlanta[p] );				// M10
+					BigMauternativo = TmaxE[e]-  TminP[p] ;				// M10
 					// declara expressão
 					IloExpr expr1(env);
 
@@ -2086,33 +1966,15 @@ void ClasseModelo::EscreveVariaveisZeDoModeloAposResolucao(int EscreveArquivoCom
 	}
 
 }
-void ClasseModelo::EscreveVariaveisZrDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, IloFloatVarArray Zr ){
-	for (int p = 0; p < NP; p++) {
-		if( EscreveNaTelaResultados == 1){
-			cout << Zr[p].getName() << " [" << cplex.getValue(Zr[p]) << "]  "<< endl;
-		}
-		if( EscreveArquivoComRespostas == 1){
-			logfile2 << Zr[p].getName() << " [" << cplex.getValue(Zr[p]) << "]  "<< endl;
-		}
-	}
 
-	if( EscreveNaTelaResultados == 1){
-		cout << endl;
-	}
-	if( EscreveArquivoComRespostas == 1){
-		logfile2 << endl;
-	}
-}
 
 // Calcula Função Objetivo Real
-void ClasseModelo::CalculaFuncaoObjetivo(  IloCplex cplex, IloFloatVarArray Ze,  IloFloatVarArray Zr, double& ValorRealFuncaoObjetivo){
+void ClasseModelo::CalculaFuncaoObjetivo(  IloCplex cplex, IloFloatVarArray Ze,   double& ValorRealFuncaoObjetivo){
 	ValorRealFuncaoObjetivo = 0;
 	for( int e = 0; e < NE; e++){
 		ValorRealFuncaoObjetivo = ValorRealFuncaoObjetivo + cplex.getValue(Ze[e]);
 	}
-	for( int p = 0; p < NP; p++){
-		ValorRealFuncaoObjetivo = ValorRealFuncaoObjetivo + cplex.getValue(Zr[p]);
-	}
+
 }
 
 
@@ -2310,7 +2172,7 @@ void ClasseModelo::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int Esc
 }
 
 // Resolve modelo
-int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes, int& PlantasComAtrazo, double& ValorAtrazoPlantas , double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
+int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes,  double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
 
 	int Escreve;				// Escreve variaveis criadas
 
@@ -2362,9 +2224,7 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 	TipoZe 		Ze(env,NE);
 	CriaZe(Ze ,Escreve);
 
-// Variavel Zr
-	TipoZr 		Zr(env,NP);
-	CriaZr(Zr ,Escreve);
+
 
 // Variavel Tvei
 	TipoTvei 	Tvei(env,NV);
@@ -2379,12 +2239,11 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 
 // Calcula variaveis de adiantamento e postergamento dos limites de tempo
 	CalculaTempoPodeAdiantarOuPostergarEmpresa(Escreve);
-	CalculaTempoPodeAdiantarOuPostergarPlantas(Escreve);
 
 
 
 // Funcao Objetivo
-	FuncaoObjetivo(Ze, Zr, model, EscreveRestricao[0]);
+	FuncaoObjetivo(Ze, model, EscreveRestricao[0]);
 
 // Restrição 1 : Antendimento das Demandas
 	Restricao_AtendimentoDasDemandas(Alfa, model, EscreveRestricao[1]);
@@ -2392,8 +2251,6 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 	Restricao_LowerBoundZe(Ze, Tvei, Alfa, model, EscreveRestricao[2]);
 // Restrição  3 : Vinculo Tvei e TPvei
 	Restricao_VinculoTveiTPvei( Alfa, TPvei, Tvei,model, EscreveRestricao[3] );
-// Restrição  4 : de lower bound Zr
-	Restricao_LowerBoundZr( Zr, Tvei, Alfa,  model, EscreveRestricao[4]);
 // Restrição  5 e 6 : de precedencia Tvei
 	Restricao_PrecedenciaTvei(  Alfa, Beta, Tvei, model,  EscreveRestricao[5], EscreveRestricao[6]);
 // Restrição  7:
@@ -2451,8 +2308,7 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 	ConstrucoesComAtrazo = -1;
 	DemandasAfetadas = -1;
 	ValorAtrazoConstrucoes = -1;
-	PlantasComAtrazo = -1;
-	ValorAtrazoPlantas = -1;
+
 	gap = -1;
 
 // Resolve o modelo.
@@ -2472,7 +2328,6 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 		Beta.clear();
 		BetaProducao.clear();
 		Ze.clear();
-		Zr.clear();
 		Tvei.clear();
 		TPvei.clear();
 		TPvei.clear();
@@ -2500,7 +2355,7 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 		primal = cplex->getObjValue();
 		dual = cplex->getBestObjValue();
 		if( cplex->getStatus() == 1 || cplex->getStatus() == 2 || cplex->getStatus() == 4 ){
-			CalculaFuncaoObjetivo(		*cplex, Ze,  Zr, 	SolucaoReal);
+			CalculaFuncaoObjetivo(		*cplex, Ze, 	SolucaoReal);
 		}
 		gap =  100 * ( cplex->getObjValue() - cplex->getBestObjValue() ) / cplex->getObjValue();
 		tempo = Tempo2 - Tempo1;
@@ -2537,7 +2392,6 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 			EscreveVariaveisTveiDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Tvei);
 			EscreveVariaveisTPveiDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, TPvei);
 			EscreveVariaveisZeDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Ze);
-			EscreveVariaveisZrDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Zr);
 
 		}
 
@@ -2564,7 +2418,6 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 		Beta.clear();
 		BetaProducao.clear();
 		Ze.clear();
-		Zr.clear();
 		Tvei.clear();
 		TPvei.clear();
 		TPvei.clear();
@@ -2598,8 +2451,7 @@ ClasseModelo::~ClasseModelo(){
 	Nome2.clear();
 	TempoPodeAdiantarEmpresa.clear();
 	TempoPodePostergarEmpresa.clear();
-	TempoPodeAdiantarPlanta.clear();
-	TempoPodePostergarPlanta.clear();
+
 
 	env.end();
 

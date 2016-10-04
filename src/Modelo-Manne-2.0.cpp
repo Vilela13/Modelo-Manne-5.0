@@ -196,7 +196,7 @@ int main(int argc, char **argv) {
 
 				if( InstanciaSemViolacao->LeDados(Nome, EscreveDadosLidosNaTela) == 1){
 
-					resolveu = InstanciaSemViolacao->Cplex(Nome,  TempoExecucao, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes, PlantasComAtrazo, ValorAtrazoPlantas,  Gap, Tempo, NomeInstanciaLimiteUpper, ValorLimiteUpper);
+					resolveu = InstanciaSemViolacao->Cplex(Nome,  TempoExecucao, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes,  Gap, Tempo, NomeInstanciaLimiteUpper, ValorLimiteUpper);
 					cout  << " Resolveu = " << resolveu << endl << endl ;
 
 					ArquivoExcelResposta = fopen(Saida.c_str(), "a");
@@ -239,7 +239,7 @@ int main(int argc, char **argv) {
 
 				if( InstanciaComViolacao->LeDados(Nome, EscreveDadosLidosNaTela) == 1){
 
-					resolveu = InstanciaComViolacao->Cplex(Nome,  TempoExecucao, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes, PlantasComAtrazo, ValorAtrazoPlantas,  Gap, Tempo, NomeInstanciaLimiteUpper, ValorLimiteUpper);
+					resolveu = InstanciaComViolacao->Cplex(Nome,  TempoExecucao, Status, SolucaoPrimal, SolucaoDual, SolucaoReal, ConstrucoesComAtrazo, DemandasAfetadas, ValorAtrazoConstrucoes,  Gap, Tempo, NomeInstanciaLimiteUpper, ValorLimiteUpper);
 					cout  << " Resolveu = " << resolveu << endl << endl ;
 
 					ArquivoExcelResposta = fopen(Saida.c_str(), "a");
