@@ -6,12 +6,9 @@ int main(int argc, char **argv) {
 
 	if( argc == 4){
 
-#include "DeclaracaoVariaveisMain.hpp"
+		#include "DeclaracaoVariaveisMain.hpp"
 
-
-
-
-		EscreveDadosLidosNaTela = 1;
+		EscreveDadosLidosNaTela = 0;
 		ComViolacao = 1;
 
 	//Cria instancia manual
@@ -126,7 +123,11 @@ int main(int argc, char **argv) {
 
 		if( TipoDeEntrada.compare("arq") == 0 ){
 			fprintf(ArquivoExcelResposta,"%s \n", buffer);
-			fprintf(ArquivoExcelResposta, "Instância \t Status \t Solução_Primal \t Solução_Dual \t Solução_Com_Atrazo \t Construcoes_Com_Atrazo \t Demandas_Afetadas  \t Plantas_Com_Atrazo \t Valor_Atrazo_Plantas \t Gap \t Tempo \n");
+			if( ComViolacao == 0){
+				fprintf(ArquivoExcelResposta, "Instância \t Status \t Solução_Primal \t Solução_Dual \t Solução_Real \t Gap \t Tempo \n");
+			}else{
+				fprintf(ArquivoExcelResposta, "Instância \t Status \t Solução_Primal \t Solução_Dual \t Solução_Real \t Construcoes_Com_Atrazo \t Demandas_Afetadas  \t Gap \t Tempo \n");
+			}
 		}
 		fclose(ArquivoExcelResposta);
 
