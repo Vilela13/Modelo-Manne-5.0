@@ -170,8 +170,8 @@ public:
 	void Restricao_PrecedenciaTPvei( TipoAlfa,TipoBeta,TipoTPvei, IloModel&, int, int);
 	void Restricao_TempoDeVidaDoConcreto( TipoAlfa,TipoTvei, TipoTPvei, IloModel&, int);
 
-	void Restricao_LimiteDeTempoNaEntrega( TipoTvei, IloModel&, int );
-	void Restricao_LimiteDeTempoNaPlanta( TipoTvei,  IloModel&, int);
+	void Restricao_LimiteDeTempoNaEntrega( TipoTvei,TipoAlfa, IloModel&, int );
+	void Restricao_LimiteDeTempoNaPlanta( TipoTvei, TipoAlfa, IloModel&, int);
 
 
 	void VerificaOuCriaPastaOut(int);
@@ -1539,7 +1539,7 @@ void ClasseModelo::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProduc
 	}
 }
 	// restrição 13
-void ClasseModelo::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa,TipoTvei Tvei, TipoTPvei TPvei, IloModel& model, int EscreveRestricao){
+void ClasseModelo::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa, TipoTvei Tvei, TipoTPvei TPvei, IloModel& model, int EscreveRestricao){
 	float BigMauternativo;
 	int vAux;
 	IloRangeArray Restricao13;
@@ -1593,7 +1593,7 @@ void ClasseModelo::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa,TipoTvei Tvei,
 
 }
 	// restrição 14 e 15
-void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei,  IloModel& model, int EscreveRestricao){
+void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAlfa Alfa, IloModel& model, int EscreveRestricao){
 	IloRangeArray Restricao14;
 	IloRangeArray Restricao15;
 	char varName[40];
@@ -1621,9 +1621,9 @@ void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei,  IloModel& m
 				IloExpr expr2(env);
 
 				if ( EscreveRestricao == 1){
-					cout << "  Tvei[" << v << "][" << e1 << "][" << i << "] >= TminE[" << e1 <<"] " << endl;
+					cout << "  Tvei[" << v << "][" << e1 << "][" << i << "] >= TminE[" << e1 <<"] *Alfa[" << v << "][" << e1 << "][" << i << "]" << endl;
 				}
-				expr1 += Tvei[v][e1][i] - TminE[e1] ;
+				expr1 += Tvei[v][e1][i] - TminE[e1]*Alfa[v][e1][i] ;
 				Restricao14[NumAux] = expr1 >= 0;
 
 				sprintf(varName,"Rest14_TviMin_v%de%di%d", v, e1, i);
@@ -1633,9 +1633,9 @@ void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei,  IloModel& m
 				//model.add( Tvei[v][e1][i] >= TminE[e1] - AEe[e1] );
 
 				if ( EscreveRestricao == 1){
-					cout << "  Tvei[" << v << "][" << e1 << "][" << i << "] <= TmaxE[" << e1 <<"] " << endl;
+					cout << "  Tvei[" << v << "][" << e1 << "][" << i << "] <= TmaxE[" << e1 <<"] *Alfa[" << v << "][" << e1 << "][" << i << "]" << endl;
 				}
-				expr2 += Tvei[v][e1][i] - TmaxE[e1] ;
+				expr2 += Tvei[v][e1][i] - TmaxE[e1]*Alfa[v][e1][i] ;
 				Restricao15[NumAux] = expr2 <= 0;
 
 				sprintf(varName,"Rest15_TviMax_v%de%di%d", v, e1, i);
@@ -1653,7 +1653,7 @@ void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei,  IloModel& m
 	}
 }
 	// restrição 16 e 17
-void ClasseModelo::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei,  IloModel& model, int EscreveRestricao ){
+void ClasseModelo::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei, TipoAlfa Alfa, IloModel& model, int EscreveRestricao ){
 	int vAux;
 	IloRangeArray Restricao16;
 	IloRangeArray Restricao17;
@@ -1686,9 +1686,9 @@ void ClasseModelo::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei,  IloModel& m
 					IloExpr expr2(env);
 
 					if ( EscreveRestricao == 1){
-						cout << "  TPvei[" << vAux << "][" << e1 << "][" << i << "] >= TminP[" << p <<"] " << endl;
+						cout << "  TPvei[" << vAux << "][" << e1 << "][" << i << "] >= TminP[" << p <<"] *Alfa[" << vAux << "][" << e1 << "][" << i << "]" << endl;
 					}
-					expr1 += TPvei[vAux][e1][i] - TminP[p] ;
+					expr1 += TPvei[vAux][e1][i] - TminP[p] *Alfa[vAux][e1][i] ;
 					Restricao16[NumAux] = expr1 >= 0;
 
 					sprintf(varName,"Rest16_TPviMin_p%dv%de%di%d",p, vAux, e1, i);
@@ -1698,9 +1698,9 @@ void ClasseModelo::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei,  IloModel& m
 
 					//model.add(  TPvei[vAux][e1][i] >= TminP[p] - APp[p]);
 					if ( EscreveRestricao == 1){
-						cout << "  TPvei[" << vAux << "][" << e1 << "][" << i << "] <= TmaxP[" << p <<"] " << endl;
+						cout << "  TPvei[" << vAux << "][" << e1 << "][" << i << "] <= TmaxP[" << p <<"] *Alfa[" << vAux << "][" << e1 << "][" << i << "]" << endl;
 					}
-					expr2 += TPvei[vAux][e1][i] - TmaxP[p] ;
+					expr2 += TPvei[vAux][e1][i] - TmaxP[p] *Alfa[vAux][e1][i] ;
 					Restricao17[NumAux] = expr2 <= 0;
 
 					sprintf(varName,"Rest17_TPviMax_p%dv%de%di%d",p, vAux, e1, i);
@@ -2262,9 +2262,9 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 // Restrição 10
     Restricao_TempoDeVidaDoConcreto( Alfa,Tvei,TPvei, model,EscreveRestricao[13]);
 // Restrição  11
-	Restricao_LimiteDeTempoNaEntrega( Tvei,  model, EscreveRestricao[14] );
+	Restricao_LimiteDeTempoNaEntrega( Tvei,  Alfa, model, EscreveRestricao[14] );
 // Restrição  12
-	Restricao_LimiteDeTempoNaPlanta(  TPvei,  model, EscreveRestricao[15] );
+	Restricao_LimiteDeTempoNaPlanta(  TPvei,  Alfa, model, EscreveRestricao[15] );
 
 
 

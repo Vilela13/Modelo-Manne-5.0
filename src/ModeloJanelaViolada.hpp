@@ -10,17 +10,11 @@
 
 #include "Biblioteca.hpp"
 
-#define TipoAEe IloFloatVarArray
-#define TipoPEe IloFloatVarArray
 
-#define TipoAPp IloFloatVarArray
-#define TipoPPp IloFloatVarArray
+#define TipoGammaAEvei IloArray< IloArray< IloBoolVarArray > >
+#define TipoGammaPEvei IloArray< IloArray< IloBoolVarArray > >
 
-#define TipoRoAEe IloBoolVarArray
-#define TipoRoPEe IloBoolVarArray
 
-#define TipoRoAPp IloBoolVarArray
-#define TipoRoPPp IloFloatVarArray
 
 class ClasseModeloJanelaViolada : public ClasseModelo{
 	public:
@@ -35,32 +29,26 @@ class ClasseModeloJanelaViolada : public ClasseModelo{
 // Calcula Penalidades Desrespeito as Janelas De Tempo das Construções e das Plantas
 	void CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa(int, int);
 
-	void CriaAEe(TipoAEe&, int);
-	void CriaPEe(TipoPEe&, int);
-	void CriaAPp(TipoAPp&, int);
-	void CriaPPp(TipoPPp&, int);
 
-	void CriaRoAEe(TipoRoAEe, int);
-	void CriaRoPEe(TipoRoPEe, int);
-	void CriaRoAPp(TipoRoAPp, int);
-	void CriaRoPPp(TipoRoPPp, int);
+	void CriaGammaAEvei(TipoGammaAEvei, int);
+	void CriaGammaPEvei(TipoGammaPEvei, int);
+
 
 	// Funções Objetivo
-	void FuncaoObjetivo(TipoZe,  TipoRoAEe, TipoRoPEe,  IloModel&, int);
+	void FuncaoObjetivo(TipoZe,  TipoGammaAEvei, TipoGammaPEvei,  IloModel&, int);
 
 
 
-	void Restricao_LimiteDeTempoNaEntrega( TipoTvei, TipoAEe, TipoPEe, IloModel&, int );
-	void Restricao_AtribuiValorRoAEePEe( TipoAEe, TipoRoAEe, TipoPEe, TipoRoPEe, IloModel&, int );
-	void DominioAEePEe( TipoAEe, TipoPEe, IloModel&, int);
+	void Restricao_LimiteDeTempoNaEntrega( TipoTvei, TipoAlfa Alfa, TipoGammaAEvei, TipoGammaPEvei	, IloModel&, int );
+	void Restricao_AtribuiValorGammaAEeGammaPE( TipoAlfa Alfa, TipoGammaAEvei	GammaAEvei, TipoGammaPEvei	GammaPEvei, IloModel&, int );
 
-	void EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposResolucao(int, int, ofstream&, IloCplex,  TipoAEe, TipoRoAEe, TipoPEe, TipoRoPEe );
+	void EscreveVariaveisGammaAEveiGammaPEveiDoModeloAposResolucao(int, int, ofstream&, IloCplex, TipoGammaAEvei, TipoGammaPEvei );
 
-	void CalculaEntregasComAtrazo( IloCplex, TipoAEe, TipoRoAEe, TipoPEe, TipoRoPEe, int&, int&, double&);
+	void CalculaEntregasComAtrazo( IloCplex, TipoGammaAEvei, TipoGammaPEvei, int&, int&);
 
 	// Funções que chama o Cplex
 
-	int Cplex(string, int, int&, double&, double&, double&, int&, int&, double&,  double&, double&, vector < string > , vector < double >);
+	int Cplex(string, int, int&, double&, double&, double&, int&, int&,  double&, double&, vector < string > , vector < double >);
 
 	~ClasseModeloJanelaViolada();       // Destruidora
 };
@@ -128,13 +116,24 @@ void ClasseModeloJanelaViolada::CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa
 
 
 
-void ClasseModeloJanelaViolada::CriaAEe(TipoAEe& AEe, int  Escreve){
+
+
+void ClasseModeloJanelaViolada::CriaGammaAEvei(TipoGammaAEvei	GammaAEvei,int Escreve){
 	char varName[24];
-	for (int e = 0; e < NE; e++) {
-		sprintf(varName, "AEe_%d", e);
-		AEe[e] = IloFloatVar(env,varName);
-		if ( Escreve == 1){
-			cout << " AEe["<< e << "] "<< endl;
+	for (int v = 0; v < NV; v++) {
+		GammaAEvei[v] = IloArray < IloBoolVarArray >(env,NE);
+		for (int e = 0; e < NE; e++) {
+			GammaAEvei[v][e] = IloBoolVarArray(env,TCDE[e]);
+			for (int i = 0; i < TCDE[e]; i++) {
+				sprintf(varName, "Tvei_%d_%d_%d", v, e, i);
+				GammaAEvei[v][e][i] = IloBoolVar(env,varName);
+				if ( Escreve == 1){
+					cout << " GammaAEvei["<< v << "]["<< e << "]["<< i << "] "<< endl;
+				}
+			}
+			if ( Escreve == 1){
+				cout << endl;
+			}
 		}
 	}
 	if ( Escreve == 1){
@@ -143,43 +142,22 @@ void ClasseModeloJanelaViolada::CriaAEe(TipoAEe& AEe, int  Escreve){
 
 }
 
-void ClasseModeloJanelaViolada::CriaPEe(TipoPEe& PEe, int  Escreve){
+void ClasseModeloJanelaViolada::CriaGammaPEvei(TipoGammaPEvei	GammaPEvei,int Escreve){
 	char varName[24];
-	for (int e = 0; e < NE; e++) {
-		sprintf(varName, "PEe_%d", e);
-		PEe[e] = IloFloatVar(env,varName);
-		if ( Escreve == 1){
-			cout << " PEe["<< e << "] "<< endl;
-		}
-	}
-	if ( Escreve == 1){
-		cout << endl;
-	}
-}
-
-
-void ClasseModeloJanelaViolada::CriaRoAEe(TipoRoAEe	RoAEe,int Escreve){
-	char varName[24];
-	for (int e = 0; e < NE; e++) {
-		sprintf(varName, "RoAEe_%d", e);
-		RoAEe[e] = IloBoolVar(env,varName);
-		if ( Escreve == 1){
-			cout << " RoAEe["<< e << "] "<< endl;
-		}
-	}
-	if ( Escreve == 1){
-		cout << endl;
-	}
-
-}
-
-void ClasseModeloJanelaViolada::CriaRoPEe(TipoRoPEe	RoPEe,int Escreve){
-	char varName[24];
-	for (int e = 0; e < NE; e++) {
-		sprintf(varName, "RoPEe_%d", e);
-		RoPEe[e] = IloBoolVar(env,varName);
-		if ( Escreve == 1){
-			cout << " RoPEe["<< e << "] "<< endl;
+	for (int v = 0; v < NV; v++) {
+		GammaPEvei[v] = IloArray < IloBoolVarArray >(env,NE);
+		for (int e = 0; e < NE; e++) {
+			GammaPEvei[v][e] = IloBoolVarArray(env,TCDE[e]);
+			for (int i = 0; i < TCDE[e]; i++) {
+				sprintf(varName, "Tvei_%d_%d_%d", v, e, i);
+				GammaPEvei[v][e][i] = IloBoolVar(env,varName);
+				if ( Escreve == 1){
+					cout << " GammaPEvei["<< v << "]["<< e << "]["<< i << "] "<< endl;
+				}
+			}
+			if ( Escreve == 1){
+				cout << endl;
+			}
 		}
 	}
 	if ( Escreve == 1){
@@ -188,7 +166,7 @@ void ClasseModeloJanelaViolada::CriaRoPEe(TipoRoPEe	RoPEe,int Escreve){
 }
 
 // Função Objetivo
-void ClasseModeloJanelaViolada::FuncaoObjetivo(TipoZe Ze,  TipoRoAEe RoAEe, TipoRoPEe RoPEe,  IloModel& model, int Imprime){
+void ClasseModeloJanelaViolada::FuncaoObjetivo(TipoZe Ze,  TipoGammaAEvei	GammaAEvei, TipoGammaPEvei	GammaPEvei,  IloModel& model, int Imprime){
 	int Ativo;
 	Ativo = 0;
 	if ( Imprime == 1){
@@ -197,13 +175,27 @@ void ClasseModeloJanelaViolada::FuncaoObjetivo(TipoZe Ze,  TipoRoAEe RoAEe, Tipo
 	IloExpr funcao_objetivo(env);
 	for (int e = 0; e < NE; e++) {
 		funcao_objetivo += Ze[e];
-		funcao_objetivo += + PenalidadeDesrespeitoJanelaDeTempoEmpresa[e] * RoAEe[e] + PenalidadeDesrespeitoJanelaDeTempoEmpresa[e] * RoPEe[e];
 		if ( Imprime == 1){
 			if( Ativo == 1){
 				cout << "+";
 			}
-			cout << " Ze[" << e << "] + PenalidadeDesrespeitoJanelaDeTempoEmpresa[" << e << "] * RoAEe[" << e << "] + PenalidadeDesrespeitoJanelaDeTempoEmpresa[" << e << "] * RoPEe[" << e << "] ";
+			cout << " Ze[" << e << "]";
 			Ativo = 1;
+		}
+	}
+	for (int v = 0; v < NV; v++) {
+		for (int e = 0; e < NE; e++) {
+			for (int i = 0; i < TCDE[e]; i++) {
+				funcao_objetivo += + PenalidadeDesrespeitoJanelaDeTempoEmpresa[e] * GammaAEvei[v][e][i] + PenalidadeDesrespeitoJanelaDeTempoEmpresa[e] * GammaPEvei[v][e][i];
+				if ( Imprime == 1){
+					if( Ativo == 1){
+						cout << "+";
+					}
+					cout << " PenalidadeDesrespeitoJanelaDeTempoEmpresa[" << e << "] * GammaAEvei[" << v << "][" << e << "][" << i << "]";
+					cout << " + PenalidadeDesrespeitoJanelaDeTempoEmpresa[" << e << "] * GammaPEvei[" << v << "][" << e << "][" << i << "]";
+					Ativo = 1;
+				}
+			}
 		}
 	}
 	if ( Imprime == 1){
@@ -216,7 +208,7 @@ void ClasseModeloJanelaViolada::FuncaoObjetivo(TipoZe Ze,  TipoRoAEe RoAEe, Tipo
 
 
 // restrição 14 e 15
-void ClasseModeloJanelaViolada::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAEe AEe,TipoPEe PEe, IloModel& model, int EscreveRestricao){
+void ClasseModeloJanelaViolada::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAlfa Alfa, TipoGammaAEvei	GammaAEvei, TipoGammaPEvei	GammaPEvei, IloModel& model, int EscreveRestricao){
 	IloRangeArray Restricao14;
 	IloRangeArray Restricao15;
 	char varName[40];
@@ -244,21 +236,23 @@ void ClasseModeloJanelaViolada::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei,
 				IloExpr expr2(env);
 
 				if ( EscreveRestricao == 1){
-					cout << "  Tvei[" << v << "][" << e1 << "][" << i << "] >= TminE[" << e1 <<"] - AEe[" << e1 << "]" << endl;
+					cout << "  Tvei[" << v << "][" << e1 << "][" << i << "] >= TminE[" << e1 <<"]* Alfa[" << v << "][" << e1 << "][" << i << "] + TempoPodeAdiantarEmpresa[" << e1 << "] * GammaAEvei[" << v << "][" << e1 << "][" << i << "]" << endl;
 				}
-				expr1 += Tvei[v][e1][i] - TminE[e1] + AEe[e1];
+				expr1 += Tvei[v][e1][i] - TminE[e1]* Alfa[v][e1][i] + TempoPodeAdiantarEmpresa[e1] * GammaAEvei[v][e1][i];
+
+
 				Restricao14[NumAux] = expr1 >= 0;
 
 				sprintf(varName,"Rest14_TviMin_v%de%di%d", v, e1, i);
 				Restricao14[NumAux].setName(varName);
 
 				model.add(Restricao14[NumAux]);
-				//model.add( Tvei[v][e1][i] >= TminE[e1] - AEe[e1] );
+
 
 				if ( EscreveRestricao == 1){
-					cout << "  Tvei[" << v << "][" << e1 << "][" << i << "] <= TmaxE[" << e1 <<"] + PEe["<< e1 << "]" << endl;
+					cout << "  Tvei[" << v << "][" << e1 << "][" << i << "] <= TmaxE[" << e1 <<"]* Alfa[" << v << "][" << e1 << "][" << i << "] + TempoPodePostergarEmpresa[" << e1 << "] * GammaAEvei[" << v << "][" << e1 << "][" << i << "]" << endl;
 				}
-				expr2 += Tvei[v][e1][i] - TmaxE[e1] - PEe[e1];
+				expr2 += Tvei[v][e1][i] - TmaxE[e1]*Alfa[v][e1][i] - TempoPodePostergarEmpresa[e1]*GammaAEvei[v][e1][i];
 				Restricao15[NumAux] = expr2 <= 0;
 
 				sprintf(varName,"Rest15_TviMax_v%de%di%d", v, e1, i);
@@ -266,7 +260,6 @@ void ClasseModeloJanelaViolada::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei,
 
 				model.add(Restricao15[NumAux]);
 
-				//model.add(  Tvei[v][e1][i] <= TmaxE[e1] + PEe[e1] );
 
 				expr1.end();
 				expr2.end();
@@ -277,130 +270,108 @@ void ClasseModeloJanelaViolada::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei,
 }
 
 // restrição 18 e 19
-void ClasseModeloJanelaViolada::Restricao_AtribuiValorRoAEePEe( TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe, IloModel& model, int EscreveRestricao ){
+void ClasseModeloJanelaViolada::Restricao_AtribuiValorGammaAEeGammaPE( TipoAlfa Alfa, TipoGammaAEvei	GammaAEvei, TipoGammaPEvei	GammaPEvei, IloModel& model, int EscreveRestricao ){
 	IloRangeArray Restricao18;
 	IloRangeArray Restricao19;
 	char varName[40];
 
-	Restricao18 = IloRangeArray(env, NE);
-	Restricao19 = IloRangeArray(env, NE);
-
-	for (int e = 0; e < NE; e++) {
-		// declara expressão
-		IloExpr expr1(env);
-		IloExpr expr2(env);
-
-		if ( EscreveRestricao == 1){
-			cout << " AEe[" << e << "]  - TempoPodeAdiantarEmpresa[ " << e << "] * RoAEe[" << e << "] <= 0 " << endl;
+	int NumAux;
+	NumAux = 0;
+	for (int v = 0; v < NV; v++) {
+		for (int e1 = 0; e1 < NE; e1++) {
+			for (int i = 0; i < TCDE[e1]; i++) {
+				NumAux++;
+			}
 		}
-		expr1 += AEe[e]  - TempoPodeAdiantarEmpresa[e] * RoAEe[e];
-		Restricao18[e] = expr1 <= 0;
+	}
 
-		sprintf(varName,"Rest18_AtivaRoAE_e%d",e);
-		Restricao18[e].setName(varName);
+	Restricao18 = IloRangeArray(env, NumAux);
+	Restricao19 = IloRangeArray(env, NumAux);
 
-		model.add(Restricao18[e]);
+	NumAux = 0;
 
-		//model.add( AEe[e]  - TempoPodeAdiantarEmpresa[e] * RoAEe[e] <= 0 );
+	for (int v = 0; v < NV; v++) {
+		for (int e1 = 0; e1 < NE; e1++) {
+			for (int i = 0; i < TCDE[e1]; i++) {
+				// declara expressão
+				IloExpr expr1(env);
+				IloExpr expr2(env);
 
-		if ( EscreveRestricao == 1){
-			cout << " PEe[" << e << "]  - TempoPodePostergarEmpresa[ " << e << "] * RoPEe[" << e << "] <= 0 " << endl;
+				if ( EscreveRestricao == 1){
+					cout << " GammaAEvei[" << v << "][" << e1 << "][" << i << "]  - Alfa[" << v << "][" << e1 << "][" << i << "] <= 0 " << endl;
+				}
+				expr1 += GammaAEvei[v][e1][i]  - Alfa[v][e1][i];
+				Restricao18[NumAux] = expr1 <= 0;
+
+				sprintf(varName,"Rest18_DominioGammaAE_v%de%di%d",v,e1,i);
+				Restricao18[NumAux].setName(varName);
+
+				model.add(Restricao18[NumAux]);
+
+
+				if ( EscreveRestricao == 1){
+					cout << " GammaPEvei[" << v << "][" << e1 << "][" << i << "]  - Alfa[" << v << "][" << e1 << "][" << i << "] <= 0 " << endl;
+				}
+				expr2 += GammaPEvei[v][e1][i]  - Alfa[v][e1][i];
+				Restricao19[NumAux] = expr2 <= 0;
+
+				sprintf(varName,"Rest19_DominioGammaPE_v%de%di%d",v,e1,i);
+				Restricao19[NumAux].setName(varName);
+
+				model.add(Restricao19[NumAux]);
+
+				expr1.end();
+				expr2.end();
+
+				NumAux++;
+			}
 		}
-		expr2 += PEe[e]  - TempoPodePostergarEmpresa[e] * RoPEe[e];
-		Restricao19[e] = expr2 <= 0;
 
-		sprintf(varName,"Rest19_AtivaRoPE_e%d",e);
-		Restricao19[e].setName(varName);
-
-		model.add(Restricao19[e]);
-
-		//model.add( PEe[e]  - TempoPodePostergarEmpresa[e] * RoPEe[e] <= 0 );
-		expr1.end();
-		expr2.end();
 	}
 }
 
 
 // Dominio Variaveis AEe e PEe ( restrição 22 e 23 )
-void ClasseModeloJanelaViolada::DominioAEePEe( TipoAEe AEe, TipoPEe PEe, IloModel& model, int EscreveRestricao ){
-	IloRangeArray Restricao22;
-	IloRangeArray Restricao23;
-	char varName[40];
-
-	Restricao22 = IloRangeArray(env, NE);
-	Restricao23 = IloRangeArray(env, NE);
-	for (int e = 0; e < NE; e++) {
-		// declara expressão
-		IloExpr expr1(env);
-		IloExpr expr2(env);
-		if ( EscreveRestricao == 1){
-			cout << " AEe[" << e << "] >= 0 " << endl;
-		}
-
-		expr1 += AEe[e];
-		Restricao22[e] = expr1 >= 0;
-
-		sprintf(varName,"Rest22_DominioAE_e%d",e);
-		Restricao22[e].setName(varName);
-
-		model.add(Restricao22[e]);
-		//model.add( AEe[e] >= 0 );
-
-		if ( EscreveRestricao == 1){
-			cout << " PEe[" << e << "] >= 0 " << endl;
-		}
-		expr2 += PEe[e];
-		Restricao23[e] = expr2 >= 0;
-
-		sprintf(varName,"Rest23_DominioPE_e%d",e);
-		Restricao23[e].setName(varName);
-
-		model.add(Restricao23[e]);
-		//model.add( PEe[e] >= 0 );
-		expr1.end();
-		expr2.end();
-	}
-}
 
 
-void ClasseModeloJanelaViolada::EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe ){
+void ClasseModeloJanelaViolada::EscreveVariaveisGammaAEveiGammaPEveiDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoGammaAEvei	GammaAEvei, TipoGammaPEvei	GammaPEvei ){
 	if( EscreveNaTelaResultados == 1){
 		cout << " Construcoes " << endl;
 	}
 	if( EscreveArquivoComRespostas == 1){
 		logfile2 << " Construcoes "<< endl;
 	}
-	for (int e = 0; e< NE; e++) {
-		if( EscreveNaTelaResultados == 1){
-			cout << AEe[e].getName();
-			cout << " [" << cplex.getValue(AEe[e]) << "]  ";
-			cout << RoAEe[e].getName();
-			cout << " [" << cplex.getValue(RoAEe[e]) << "]  ";
-			cout << endl;
+	for (int v = 0; v < NV; v++) {
+		for (int e1 = 0; e1 < NE; e1++) {
+			for (int i = 0; i < TCDE[e1]; i++) {
+				if( EscreveNaTelaResultados == 1){
+					cout << GammaAEvei[v][e1][i].getName();
+					cout << " [" << cplex.getValue(GammaAEvei[v][e1][i]) << "]  ";
+					cout << endl;
+				}
+				if( EscreveArquivoComRespostas == 1){
+					logfile2  << GammaAEvei[v][e1][i].getName();
+					logfile2  << " [" << cplex.getValue(GammaAEvei[v][e1][i]) << "]  ";
+					logfile2  << endl;
+				}
+			}
 		}
-		if( EscreveArquivoComRespostas == 1){
-			logfile2  << AEe[e].getName();
-			logfile2  << " [" << cplex.getValue(AEe[e]) << "]  ";
-			logfile2  << RoAEe[e].getName();
-			logfile2  << " [" << cplex.getValue(RoAEe[e]) << "]  ";
-			logfile2  << endl;
-		}
-
 	}
-	for (int e = 0; e< NE; e++) {
-		if( EscreveNaTelaResultados == 1){
-			cout << PEe[e].getName();
-			cout << " [" << cplex.getValue(PEe[e]) << "]  ";
-			cout << RoPEe[e].getName();
-			cout << " [" << cplex.getValue(RoPEe[e]) << "]  ";
-			cout << endl;
-		}
-		if( EscreveArquivoComRespostas == 1){
-			logfile2  << PEe[e].getName();
-			logfile2  << " [" << cplex.getValue(PEe[e]) << "]  ";
-			logfile2  << RoPEe[e].getName();
-			logfile2  << " [" << cplex.getValue(RoPEe[e]) << "]  ";
-			logfile2  << endl;
+
+	for (int v = 0; v < NV; v++) {
+		for (int e1 = 0; e1 < NE; e1++) {
+			for (int i = 0; i < TCDE[e1]; i++) {
+				if( EscreveNaTelaResultados == 1){
+					cout << GammaPEvei[v][e1][i].getName();
+					cout << " [" << cplex.getValue(GammaPEvei[v][e1][i]) << "]  ";
+					cout << endl;
+				}
+				if( EscreveArquivoComRespostas == 1){
+					logfile2  << GammaPEvei[v][e1][i].getName();
+					logfile2  << " [" << cplex.getValue(GammaPEvei[v][e1][i]) << "]  ";
+					logfile2  << endl;
+				}
+			}
 		}
 	}
 	if( EscreveNaTelaResultados == 1 ){
@@ -412,27 +383,33 @@ void ClasseModeloJanelaViolada::EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposReso
 
 }
 
-void ClasseModeloJanelaViolada::CalculaEntregasComAtrazo(  IloCplex cplex, TipoAEe AEe, TipoRoAEe RoAEe, TipoPEe PEe, TipoRoPEe RoPEe, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes){
-	ValorAtrazoConstrucoes = 0;
+void ClasseModeloJanelaViolada::CalculaEntregasComAtrazo(  IloCplex cplex, TipoGammaAEvei	GammaAEvei, TipoGammaPEvei	GammaPEvei, int& ConstrucoesComAtrazo, int& DemandasAfetadas){
+	int ContrucaoAtiva;
+	int DemandaAtiva;
 	ConstrucoesComAtrazo = 0;
 	DemandasAfetadas = 0;
 	for( int e = 0; e < NE; e++){
-		if( cplex.getValue(RoAEe[e]) == 1){
-			ValorAtrazoConstrucoes = ValorAtrazoConstrucoes + cplex.getValue(AEe[e]);
-		}
-		if( cplex.getValue(RoPEe[e]) == 1){
-			ValorAtrazoConstrucoes = ValorAtrazoConstrucoes + cplex.getValue(PEe[e]);
-		}
-		if( cplex.getValue(RoAEe[e]) == 1 || cplex.getValue(RoPEe[e]) == 1 ){
-			ConstrucoesComAtrazo++;
-			DemandasAfetadas = DemandasAfetadas + TCDE[e];
+		ContrucaoAtiva = 0;
+		for (int i = 0; i < TCDE[e]; i++) {
+			DemandaAtiva = 0;
+			for (int v = 0; v < NV; v++) {
+				if( cplex.getValue(GammaAEvei[v][e][i]) == 1 || cplex.getValue(GammaPEvei[v][e][i]) == 1){
+					if( ContrucaoAtiva == 0){
+						ConstrucoesComAtrazo++;
+					}
+					if( DemandaAtiva == 0){
+						DemandasAfetadas++;
+					}
+
+				}
+			}
 		}
 	}
 }
 
 
 // Resolve modelo
-int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes,  double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
+int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas,   double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
 
 	int Escreve;				// Escreve variaveis criadas
 
@@ -496,20 +473,24 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 
 // Variaveis de adiantamento e postergamento dos limites de tempo
 
+	int NumAux;
+	NumAux = 0;
+	for (int v = 0; v < NV; v++) {
+		for (int e1 = 0; e1 < NE; e1++) {
+			for (int i = 0; i < TCDE[e1]; i++) {
+				NumAux++;
+			}
+		}
+	}
 
-	TipoAEe		AEe(env,NE);		// Tempo de adiantamento do tempo limite da contrução e
-	CriaAEe(AEe, Escreve);
+	TipoGammaAEvei		GammaAEvei(env,NumAux);		// Tempo de adiantamento do tempo limite da contrução e
+	CriaGammaAEvei(GammaAEvei, Escreve);
 
-	TipoPEe		PEe(env,NE);		// Tempo de postergamento do tempo limite da contrução e
-	CriaPEe(PEe, Escreve);
+	TipoGammaPEvei		GammaPEvei(env,NumAux);		// Tempo de postergamento do tempo limite da contrução e
+	CriaGammaPEvei(GammaPEvei, Escreve);
 
+	NumAux = 0;
 
-
-	TipoRoAEe RoAEe(env,NE);		// Variavel se teve ou não adiantamento do tempo limite da contrução e
-	CriaRoAEe(RoAEe,  Escreve);
-
-	TipoRoPEe RoPEe(env,NE);		// Variavel se teve ou não postergamento do tempo limite da contrução e
-	CriaRoPEe(RoPEe,  Escreve);
 
 
 
@@ -520,7 +501,7 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 	CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa(TamanhoPenalidade[1], Escreve);
 
 // Funcao Objetivo
-	FuncaoObjetivo(Ze, RoAEe, RoPEe, model, EscreveRestricao[0]);
+	FuncaoObjetivo(Ze, GammaAEvei, GammaPEvei, model, EscreveRestricao[0]);
 
 // Restrição 1 : Antendimento das Demandas
 	Restricao_AtendimentoDasDemandas(Alfa, model, EscreveRestricao[1]);
@@ -539,16 +520,11 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 // Restrição 10
     Restricao_TempoDeVidaDoConcreto( Alfa,Tvei,TPvei, model,EscreveRestricao[13]);
 // Restrição  11
-	Restricao_LimiteDeTempoNaEntrega( Tvei, AEe, PEe, model, EscreveRestricao[14] );
+	Restricao_LimiteDeTempoNaEntrega( Tvei, Alfa, GammaAEvei, GammaPEvei, model, EscreveRestricao[14] );
 // Restrição  12
-	Restricao_LimiteDeTempoNaPlanta(  TPvei, model, EscreveRestricao[15] );
+	Restricao_LimiteDeTempoNaPlanta(  TPvei, Alfa, model, EscreveRestricao[15] );
 // Restrição  13
-	Restricao_AtribuiValorRoAEePEe( AEe, RoAEe, PEe, RoPEe, model, EscreveRestricao[16]);
-
-// Dominio AEe e PEe
-	DominioAEePEe( AEe, PEe, model, EscreveRestricao[18]);
-
-
+	Restricao_AtribuiValorGammaAEeGammaPE( Alfa, GammaAEvei, GammaPEvei, model, EscreveRestricao[16]);
 
 
 // Modelo
@@ -589,7 +565,6 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 	SolucaoReal = -1;
 	ConstrucoesComAtrazo = -1;
 	DemandasAfetadas = -1;
-	ValorAtrazoConstrucoes = -1;
 	gap = -1;
 
 // Resolve o modelo.
@@ -614,11 +589,8 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 		TPvei.clear();
 		EscreveRestricao.clear();
 
-		AEe.clear();
-		PEe.clear();
-
-		RoAEe.clear();
-		RoPEe.clear();
+		GammaAEvei.clear();
+		GammaPEvei.clear();
 
 
 		return (0);
@@ -642,7 +614,7 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 		dual = cplex->getBestObjValue();
 		if( cplex->getStatus() == 1 || cplex->getStatus() == 2 || cplex->getStatus() == 4 ){
 			CalculaFuncaoObjetivo(		*cplex, Ze,  SolucaoReal);
-			CalculaEntregasComAtrazo(	*cplex, AEe, RoAEe, PEe, RoPEe, ConstrucoesComAtrazo, 	DemandasAfetadas, ValorAtrazoConstrucoes);
+			CalculaEntregasComAtrazo(	*cplex, GammaAEvei, GammaPEvei, ConstrucoesComAtrazo, 	DemandasAfetadas);
 		}
 		gap =  100 * ( cplex->getObjValue() - cplex->getBestObjValue() ) / cplex->getObjValue();
 		tempo = Tempo2 - Tempo1;
@@ -654,7 +626,6 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 			cout << "Soution with delay = " << SolucaoReal << endl;
 			cout << "Cosntructions afected by the delay = " << ConstrucoesComAtrazo << endl;
 			cout << "Demands afected by the delay = " << DemandasAfetadas << endl;
-			cout << "Constructions's Delay = " << ValorAtrazoConstrucoes << endl;
 			cout << "Gap = " << gap << "%" << endl ;
 			cout << "Tempo = " << tempo << " segundos. " << endl<< endl;
 		}
@@ -666,7 +637,6 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 			logfile2 << "Soution with delay = " << SolucaoReal << endl;
 			logfile2 << "Cosntructions afected by the delay = " << ConstrucoesComAtrazo << endl;
 			logfile2 << "Demands afected by the delay = " << DemandasAfetadas << endl;
-			logfile2 << "Constructions's Delay = " << ValorAtrazoConstrucoes << endl;
 			logfile2 << "Gap = " << gap  << "%" << endl ;
 			logfile2 << "Tempo = " << tempo << " segundos. " << endl << endl;
 		}
@@ -680,7 +650,7 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 			EscreveVariaveisTPveiDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, TPvei);
 			EscreveVariaveisZeDoModeloAposResolucao(				EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, Ze);
 
-			EscreveVariaveisAEeRoAEePEeRoPEeDoModeloAposResolucao( 	EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, AEe, RoAEe, PEe, RoPEe );
+			EscreveVariaveisGammaAEveiGammaPEveiDoModeloAposResolucao( 	EscreveArquivoComRespostas, EscreveNaTelaResultados, logfile2, *cplex, GammaAEvei, GammaPEvei );
 
 
 		}
@@ -713,12 +683,8 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 		TPvei.clear();
 		EscreveRestricao.clear();
 
-		AEe.clear();
-		PEe.clear();
-
-
-		RoAEe.clear();
-		RoPEe.clear();
+		GammaAEvei.clear();
+		GammaPEvei.clear();
 
 
 		return (1);
@@ -726,17 +692,6 @@ int ClasseModeloJanelaViolada::Cplex(string Nome, int  TempoExecucao, int &statu
 }
 
 ClasseModeloJanelaViolada::~ClasseModeloJanelaViolada(){
-
-
-
-
-
-
-
-
-
-
-
 
 	PenalidadeDesrespeitoJanelaDeTempoEmpresa.clear();
 
