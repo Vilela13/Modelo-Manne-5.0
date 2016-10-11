@@ -26,6 +26,8 @@ class ClasseModeloJanelaViolada : public ClasseModelo{
 
 	void CalculaTempoPodeAdiantarOuPostergarEmpresa(int);
 
+
+
 // Calcula Penalidades Desrespeito as Janelas De Tempo das Construções e das Plantas
 	void CalculaPenalidadeDesrespeitoJanelaDeTempoEmpresa(int, int);
 

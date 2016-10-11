@@ -131,6 +131,9 @@ public:
 	TipoTminP	TminP;		// Tempo mínimo na planta
 	TipoTmaxP	TmaxP;		// Tempo máximo na planta
 
+
+
+// ********************** Se possui isto aqui para se facilitar o calculo dos Big Ms ******************
 	vector< double >	TempoPodeAdiantarEmpresa;
 	vector< double >	TempoPodePostergarEmpresa;
 
@@ -140,6 +143,7 @@ public:
 
 	void CalculaTempoPodeAdiantarOuPostergarEmpresa(int);
 
+// ***************************************************************************************************
 
 
 // Variaveis do CPLEX
@@ -195,7 +199,7 @@ public:
 
 // Funções que chama o Cplex
 
-    int Cplex(string, int, int&, double&, double&, double&, int&, int&, double&, double&, double&, vector < string > , vector < double >);
+    int Cplex(string, int, int&, double&, double&, double&, double&, double&,  vector < string > , vector < double >);
 
 // Escrever em diretorio a saída
 
@@ -2172,7 +2176,7 @@ void ClasseModelo::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int Esc
 }
 
 // Resolve modelo
-int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal, int& ConstrucoesComAtrazo, int& DemandasAfetadas, double& ValorAtrazoConstrucoes,  double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
+int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &primal, double &dual, double& SolucaoReal,   double &gap, double &tempo,  vector < string > NomeInstanciaLimiteUpper, vector < double > ValorLimiteUpper){
 
 	int Escreve;				// Escreve variaveis criadas
 
@@ -2305,10 +2309,6 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 	primal = -1;
 	dual = -1;
 	SolucaoReal = -1;
-	ConstrucoesComAtrazo = -1;
-	DemandasAfetadas = -1;
-	ValorAtrazoConstrucoes = -1;
-
 	gap = -1;
 
 // Resolve o modelo.
@@ -2365,9 +2365,6 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 			cout << "Solution primal cost = " << primal << endl;
 			cout << "Solution dual cost = " << dual << endl ;
 			cout << "Soution with delay = " << SolucaoReal << endl;
-			cout << "Cosntructions afected by the delay = " << ConstrucoesComAtrazo << endl;
-			cout << "Demands afected by the delay = " << DemandasAfetadas << endl;
-			cout << "Constructions's Delay = " << ValorAtrazoConstrucoes << endl;
 			cout << "Gap = " << gap << "%" << endl ;
 			cout << "Tempo = " << tempo << " segundos. " << endl<< endl;
 		}
@@ -2377,9 +2374,6 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 			logfile2 << "Solution primal cost = " << primal << endl;
 			logfile2 << "Solution dual cost = " << dual << endl ;
 			logfile2 << "Soution with delay = " << SolucaoReal << endl;
-			logfile2 << "Cosntructions afected by the delay = " << ConstrucoesComAtrazo << endl;
-			logfile2 << "Demands afected by the delay = " << DemandasAfetadas << endl;
-			logfile2 << "Constructions's Delay = " << ValorAtrazoConstrucoes << endl;
 			logfile2 << "Gap = " << gap  << "%" << endl ;
 			logfile2 << "Tempo = " << tempo << " segundos. " << endl << endl;
 		}

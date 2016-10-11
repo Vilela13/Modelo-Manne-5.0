@@ -30,6 +30,8 @@
 
 #include <math.h>
 
+#include <climits>
+
 
 #include <dirent.h> 	// Manipulação de arquivos em C (meu caso, ver se arquivo existe)
 
@@ -53,5 +55,7 @@ using namespace std;
 
 #include "Modelo.hpp"
 #include "ModeloJanelaViolada.hpp"
+
+#include "FuncoesDoCPP.hpp"
 
 #endif /* BIBLIOTECA_HPP_ */
