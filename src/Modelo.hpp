@@ -826,7 +826,7 @@ int ClasseModelo::LeDados(string Nome, int comentarios){
 	}
 }
 
-// Calcula tempos que podem adiantar ou protergar o funcionamento das construções ou plantas
+// Calcula tempos que podem adiantar ou protergar o funcionamento das construções ou plantas, nesse caso coloca zero nos tempos de adiantamento e atraso nas empresas, no outro caso coloca tempo, na outra construtora
 void ClasseModelo::CalculaTempoPodeAdiantarOuPostergarEmpresa(int Escreve){
 	TempoPodeAdiantarEmpresa.resize(NE);
 	TempoPodePostergarEmpresa.resize(NE);
@@ -848,11 +848,11 @@ void ClasseModelo::CriaAlfa(TipoAlfa& Alfa, int Escreve){
 		Alfa[v] = IloArray< IloBoolVarArray>(env, NE);
 		for (int e = 0; e < NE; e++) {
 			Alfa[v][e] =  IloBoolVarArray(env, TCDE[e]);
-			for (int k = 0; k < TCDE[e]; k++) {
-				sprintf(varName, "Alfa_%d_%d_%d", v, e,k);
-				Alfa[v][e][k] = IloBoolVar(env,varName);
+			for (int i = 0; i < TCDE[e]; i++) {
+				sprintf(varName, "Alfa_%d_%d_%d", v, e, i);
+				Alfa[v][e][i] = IloBoolVar(env,varName);
 				if ( Escreve == 1){
-					cout << " Alfa["<< v << "][" << e << "][" << k << "] "<< endl;
+					cout << " Alfa["<< v << "][" << e << "][" << i << "] "<< endl;
 				}
 			}
 			if ( Escreve == 1){
@@ -980,7 +980,7 @@ void ClasseModelo::CriaZe(TipoZe& Ze , int Escreve){
 		sprintf(varName, "Ze_%d", e);
 		Ze[e] = IloFloatVar(env,varName);
 		if ( Escreve == 1){
-			cout << " Z_Entrada["<< e << "] "<< endl;
+			cout << " Z_Entrada[" << e << "] "<< endl;
 		}
 	}
 	if ( Escreve == 1){
@@ -1004,7 +1004,7 @@ void ClasseModelo::FuncaoObjetivo(TipoZe Ze,   IloModel& model, int Imprime){
 			if( Ativo == 1){
 				cout << "+";
 			}
-			cout << " Ze[" << e << "]  ";
+			cout << " Ze[" << e << "] ";
 			Ativo = 1;
 		}
 	}
@@ -1052,7 +1052,7 @@ void ClasseModelo::Restricao_AtendimentoDasDemandas(TipoAlfa Alfa, IloModel& mod
 			//monta o lado direito
 			Restricao1Demandas[NumAux] = expr == 1 ;
 
-			sprintf(varName,"Rest1_SuprirD_e%di%d",e, i);
+			sprintf(varName,"Rest1_SuprirD_e%di%d", e, i);
 			Restricao1Demandas[NumAux].setName(varName);
 
 
@@ -1072,11 +1072,11 @@ void ClasseModelo::Restricao_LowerBoundZe(TipoZe Ze, TipoTvei Tvei, TipoAlfa Alf
 	NumAux = 0;
 
 	for (int e = 0; e < NE; e++) {
-			for (int i = 0; i < TCDE[e]; i++) {
-				for (int v = 0; v < NV; v++) {
-					NumAux++;
-				}
+		for (int i = 0; i < TCDE[e]; i++) {
+			for (int v = 0; v < NV; v++) {
+				NumAux++;
 			}
+		}
 	}
 
 	Restricao2 = IloRangeArray(env, NumAux);
@@ -1098,12 +1098,12 @@ void ClasseModelo::Restricao_LowerBoundZe(TipoZe Ze, TipoTvei Tvei, TipoAlfa Alf
 				Restricao2[NumAux] = expr <=  0;
 
 				if( Escreve == 1){
-					cout << " Ze[" << e << "] >= Tvei[" << v << "][" << e << "][" << i << "] + DESCvi[" << v << "][" << e << "][" << i << "] - BigMauternativo  * ( 1 - Alfa[" << v << "][" << e << "][" << i << "])" << endl;
+					cout << " Ze[" << e << "] >= Tvei[" << v << "][" << e << "][" << i << "] + DESCvei[" << v << "][" << e << "][" << i << "] - BigM1  * ( 1 - Alfa[" << v << "][" << e << "][" << i << "])" << endl;
 				}
 
 
 
-				sprintf(varName,"Rest2_ZeLimInf_v%de%di%d",v, e, i);
+				sprintf(varName,"Rest2_ZeLimInf_v%de%di%d", v, e, i);
 				Restricao2[NumAux].setName(varName);
 
 				model.add(Restricao2[NumAux]);
@@ -1150,10 +1150,10 @@ void ClasseModelo::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, Ti
 					IloExpr expr2(env);
 
 					if ( EscreveRestricao == 1){
-						cout << " - BigM * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] )";
+						cout << " - BigM2 * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] )";
 						cout << " + TDESCvi[" << vAux << "][" << e << "][" << i << "] + CARRp[" << p << "]";
 						cout << "+ TEMpe[" << p << "][" << e << "] <= ";
-						cout << " Tvi[" << vAux << "][" << e << "][" << i << "] " << endl;
+						cout << " Tvei[" << vAux << "][" << e << "][" << i << "] " << endl;
 					}
 					BigMauternativo = TmaxP[p]  + CARRp[p] + TEMpe[p][e]; // M2
 
@@ -1161,7 +1161,7 @@ void ClasseModelo::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, Ti
 
 					Restricao3[NumAux] = expr1 <= 0;
 
-					sprintf(varName,"Rest3_VincTsSup_p%dv%de%di%d",p,vAux, e, i);
+					sprintf(varName, "Rest3_VincTsSup_p%dv%de%di%d", p, vAux, e, i);
 					Restricao3[NumAux].setName(varName);
 
 					model.add(Restricao3[NumAux]);
@@ -1169,10 +1169,10 @@ void ClasseModelo::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, Ti
 					//model.add( - BigMauternativo  * ( 1 - Alfa[vAux][e][i] ) + TPvei[vAux][e][i] + CARRp[p] + TEMpe[p][e] <= Tvei[vAux][e][i] );
 
 					if ( EscreveRestricao == 1){
-						cout << " BigM * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] )";
+						cout << " BigM2 * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] )";
 						cout << " + TDESCvi[" << vAux << "][" << e << "][" << i << "] + CARRp[" << p << "]";
 						cout << "+ TEMpe[" << p << "][" << e << "] >= ";
-						cout << " Tvi[" << vAux << "][" << e << "][" << i << "] " << endl;
+						cout << " Tvei[" << vAux << "][" << e << "][" << i << "] " << endl;
 					}
 					BigMauternativo = TmaxE[e] + TempoPodePostergarEmpresa[e];	// M3
 
@@ -1182,7 +1182,7 @@ void ClasseModelo::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, Ti
 
 					Restricao4[NumAux] = expr2 >= 0;
 
-					sprintf(varName,"Rest4_VincTsInf_p%dv%de%di%d",p,vAux, e, i);
+					sprintf(varName,"Rest4_VincTsInf_p%dv%de%di%d", p, vAux, e, i);
 					Restricao4[NumAux].setName(varName);
 
 					model.add(Restricao4[NumAux]);
@@ -1202,7 +1202,7 @@ void ClasseModelo::Restricao_VinculoTveiTPvei(TipoAlfa Alfa, TipoTPvei TPvei, Ti
 
 
 
-	// restrição 7 e 8
+	// restrição 6 e 7
 void ClasseModelo::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTvei Tvei, IloModel& model, int EscrveRestricao1, int EscreveRestricao2){
 	float BigMauternativo;
 	IloRangeArray Restricao7;
@@ -1247,9 +1247,9 @@ void ClasseModelo::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTv
 							IloExpr expr2(env);
 
 							if ( EscrveRestricao1 == 1){
-								cout << " BigM * ( 1 - ALFAvei[" << v << "][" << e1 << "][" << i << "]) +";
-								cout << " BigM * ( 1 - ALFAve'i'[" << v << "][" << e2 << "][" << j << "]) +";
-								cout << " BigM * ( 1 - BETAveie'i'[" << v << "][" << e1 << "][" << i << "][" << e2 << "][" << j << "])";
+								cout << " BigM3 * ( 1 - ALFAvei[" << v << "][" << e1 << "][" << i << "]) +";
+								cout << " BigM3 * ( 1 - ALFAve'i'[" << v << "][" << e2 << "][" << j << "]) +";
+								cout << " BigM3 * ( 1 - BETAveie'i'[" << v << "][" << e1 << "][" << i << "][" << e2 << "][" << j << "])";
 								cout << " + Tve'i'[" << v << "][" << e2 << "][" << j << "] >= Tvei[" << v << "][" << e1 << "][" << i << "]";
 								cout << " + Pvei[" << v << "][" << e1 << "][" << i << "]";
 								cout << " + Svee'[" << v << "][" << e1 << "][" << e2 << "]" << endl;
@@ -1259,7 +1259,7 @@ void ClasseModelo::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTv
 							expr1 += BigMauternativo * ( 1 - Alfa[v][e1][i] ) + BigMauternativo * ( 1 - Alfa[v][e2][j] ) + BigMauternativo * ( 1 - Beta[v][e1][i][e2][j] ) + Tvei[v][e2][j] - Tvei[v][e1][i] - DESCvi[v][e1][i] - Svii[v][e1][e2] ;
 							Restricao7[NumAux] = expr1 >= 0;
 
-							sprintf(varName,"Rest7_PrecTvi_v%de%di%de'%di'%d",v, e1, i,e2, j);
+							sprintf(varName,"Rest6_PrecTvi_v%de%di%de'%di'%d", v, e1, i, e2, j);
 							Restricao7[NumAux].setName(varName);
 
 							model.add(Restricao7[NumAux]);
@@ -1268,9 +1268,9 @@ void ClasseModelo::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTv
 
 							//model.add( BigMauternativo * ( 1 - Alfa[v][e1][i] ) + BigMauternativo * ( 1 - Alfa[v][e2][j] ) + BigMauternativo * ( 1 - Beta[v][e1][i][e2][j] ) + Tvei[v][e2][j] >= Tvei[v][e1][i] + DESCvi[v][e1][i] + Svii[v][e1][e2] );
 							if ( EscreveRestricao2 == 1){
-								cout << " BigM * ( 1 - ALFAvei[" << v << "][" << e1 << "][" << i << "]) +";
-								cout << " BigM * ( 1 - ALFAve'i'[" << v << "][" << e2 << "][" << j << "]) +";
-								cout << " BigM * BETAveie'i'[" << v << "][" << e1 << "][" << i << "][" << e2 << "][" << j << "]";
+								cout << " BigM4 * ( 1 - ALFAvei[" << v << "][" << e1 << "][" << i << "]) +";
+								cout << " BigM4 * ( 1 - ALFAve'i'[" << v << "][" << e2 << "][" << j << "]) +";
+								cout << " BigM4 * BETAveie'i'[" << v << "][" << e1 << "][" << i << "][" << e2 << "][" << j << "]";
 								cout << " + Tvei[" << v << "][" << e1 << "][" << i << "] >= Tvei'[" << v << "][" << e2 << "][" << j << "]";
 								cout << " + DESCvi'[" << v << "][" << e2 << "][" << j << "]";
 								cout << " + Svi'i[" << v << "][" << e2 << "][" << e1 << "]" << endl << endl;
@@ -1280,7 +1280,7 @@ void ClasseModelo::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTv
 							expr2 += BigMauternativo * ( 1 - Alfa[v][e1][i] ) + BigMauternativo * ( 1 - Alfa[v][e2][j] ) + BigMauternativo * Beta[v][e1][i][e2][j] + Tvei[v][e1][i] - Tvei[v][e2][j] - DESCvi[v][e2][j] - Svii[v][e2][e1];
 							Restricao8[NumAux] = expr2 >= 0;
 
-							sprintf(varName,"Rest8_PrecTvi_v%de%di%de'%di'%d",v, e1, i,e2, j);
+							sprintf(varName,"Rest7_PrecTvi_v%de%di%de'%di'%d", v, e1, i, e2, j);
 							Restricao8[NumAux].setName(varName);
 
 							model.add(Restricao8[NumAux]);
@@ -1296,7 +1296,7 @@ void ClasseModelo::Restricao_PrecedenciaTvei( TipoAlfa Alfa,TipoBeta Beta,TipoTv
 		}
 	}
 }
-	// restrição 9
+	// restrição 8
 void ClasseModelo::Restricao_TempoMaximoEntreDescarregamentosSeguidosNaMesmaEntrega( TipoAlfa Alfa,TipoTvei Tvei, IloModel& model, int EscreveRestricao ){
 	float BigMauternativo;
 	IloRangeArray Restricao9;
@@ -1327,12 +1327,12 @@ void ClasseModelo::Restricao_TempoMaximoEntreDescarregamentosSeguidosNaMesmaEntr
 				if( TCDE[e1] > 1){
 					for (int i = 0; i < ( TCDE[e1] - 1 ); i++) {
 						if ( EscreveRestricao == 1){
-							cout << " - BigM * ( 1 - ALFAvei+1[" << v1 << "][" << e1 << "][" << i + 1 << "] )";
+							cout << " - BigM5 * ( 1 - ALFAvei+1[" << v1 << "][" << e1 << "][" << i + 1 << "] )";
 							cout << " + Tvei+1[" << v1 << "][" << e1 << "][" << i + 1 << "] <=";
-							cout << " BigM * ( 1 - ALFAv'ei[" <<v2<< "][" <<e1<< "][" <<i<< "] )";
+							cout << " BigM5 * ( 1 - ALFAv'ei[" <<v2<< "][" <<e1<< "][" <<i<< "] )";
 							cout << " + Tv'ei[" << v2 << "][" << e1 << "][" << i << "] + Teta[" << e1 << "]" << endl;
 						}
-						BigMauternativo = TmaxE[e1] + TempoPodePostergarEmpresa[e1];		// M7
+						BigMauternativo = TmaxE[e1] + TempoPodePostergarEmpresa[e1];		// M5
 
 						// declara expressão
 						IloExpr expr1(env);
@@ -1340,7 +1340,7 @@ void ClasseModelo::Restricao_TempoMaximoEntreDescarregamentosSeguidosNaMesmaEntr
 						expr1 += - BigMauternativo * ( 1 - Alfa[v1][e1][i+1] ) +  Tvei[v1][e1][i+1]   - BigMauternativo * ( 1 - Alfa[v2][e1][i] ) - Tvei[v2][e1][i] - DESCvi[v2][e1][i] - Teta[e1];
 						Restricao9[NumAux] = expr1 <= 0;
 
-						sprintf(varName,"Rest9_SeqMax_v%dv'%de%di%di'%d",v1,v2,e1,i,i+1);
+						sprintf(varName,"Rest8_SeqMax_v%dv'%de%di%di'%d",v1,v2,e1,i,i+1);
 						Restricao9[NumAux].setName(varName);
 
 						model.add(Restricao9[NumAux]);
@@ -1391,10 +1391,10 @@ void ClasseModelo::Restricao_TempoMinimoEntreDescarregamentosSeguidosNaMesmaEntr
 				if( TCDE[e1] > 1){
 					for (int i = 0; i < (TCDE[e1] - 1); i++) {
 						if ( EscreveRestricao == 1){
-							cout << " BigM * ( 1 - ALFAvei+1[" << v1 << "][" << e1 << "][" << i +1 << "]) +";
+							cout << " BigM6 * ( 1 - ALFAvei+1[" << v1 << "][" << e1 << "][" << i +1 << "]) +";
 							cout << " Tvei[" << v1 << "][" << e1 << "][" << i + 1 << "] >= ";
 							cout << " Tvei[" << v2 << "][" << e1 << "][" << i << "] +  DESCvi[" << v2 << "][" << e1 << "][" << i << "] ";
-							cout << "- BigM * ( 1 - ALFAv'ei[" << v2 << "][" << e1 << "][" << i << "] )" << endl;
+							cout << "- BigM6 * ( 1 - ALFAv'ei[" << v2 << "][" << e1 << "][" << i << "] )" << endl;
 						}
 						BigMauternativo = TmaxE[e1] + TempoPodePostergarEmpresa[e1] + DESCvi[v2][e1][i];		// M8
 
@@ -1491,9 +1491,9 @@ void ClasseModelo::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProduc
 									IloExpr expr2(env);
 
 									if ( EscreveRestricao1 == 1){
-										cout << " BigM * ( 1 - ALFAvei[" << v1Aux << "][" << e1 << "][" << i << "] ) ";
-										cout << " + BigM * ( 1 - ALFAve'i'[" << v2Aux << "][" << e2 << "][" << j << "] ) ";
-										cout << " + BigM * ( 1- BETAProd-veii'[" << p << "][" << e1 << "][" << i << "][" << e2 << "][" << j << "] )";
+										cout << " BigM7 * ( 1 - ALFAvei[" << v1Aux << "][" << e1 << "][" << i << "] ) ";
+										cout << " + BigM7 * ( 1 - ALFAve'i'[" << v2Aux << "][" << e2 << "][" << j << "] ) ";
+										cout << " + BigM7 * ( 1- BETAProd-veii'[" << p << "][" << e1 << "][" << i << "][" << e2 << "][" << j << "] )";
 										cout << " + TPvei'[" << v2Aux << "][" << e2 << "][" << j << "] >=";
 										cout << " TPvei[" << v1Aux << "][" << e1 << "][" << i << "] +  CARRp[" << p << "] " << endl;
 									}
@@ -1502,7 +1502,7 @@ void ClasseModelo::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProduc
 									expr1 += BigMauternativo  * ( 1 - Alfa[v1Aux][e1][i] ) + BigMauternativo  * ( 1 - Alfa[v2Aux][e2][j] ) + BigMauternativo * ( 1 - BetaProducao[p][e1][i][e2][j] )  + TPvei[v2Aux][e2][j] - TPvei[v1Aux][e1][i] -  CARRp[p];
 									Restricao11[NumAux] = expr1 >= 0;
 
-									sprintf(varName,"Rest11_PrecTPvi_p%dv%dv'%de%di%de'%di'%d",p, v1Aux,v2Aux, e1, i,e2, j);
+									sprintf(varName,"Rest11_PrecTPvi_p%dv%dv'%de%di%de'%di'%d", p, v1Aux, v2Aux, e1, i, e2, j);
 									Restricao11[NumAux].setName(varName);
 
 									model.add(Restricao11[NumAux]);
@@ -1510,9 +1510,9 @@ void ClasseModelo::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProduc
 									//model.add( BigMauternativo  * ( 1 - Alfa[v1Aux][e1][i] ) + BigMauternativo  * ( 1 - Alfa[v2Aux][e2][j] ) + BigMauternativo * ( 1 - BetaProducao[p][e1][i][e2][j] )  + TPvei[v2Aux][e2][j] >= TPvei[v1Aux][e1][i] +  CARRp[p] );
 
 									if ( EscreveRestricao2 == 1){
-										cout << " BigM * ( 1 - ALFAvei[" << v1Aux << "][" << e1 << "][" << i << "] )";
-										cout << " + BigM * ( 1 - ALFAve'i'[" << v2Aux << "][" << e2 << "][" << j << "])";
-										cout << " + BigM * BETAProd-veii'[" << p << "][" << e1 << "][" << i << "][" << e2 << "][" << j << "]";
+										cout << " BigM7 * ( 1 - ALFAvei[" << v1Aux << "][" << e1 << "][" << i << "] )";
+										cout << " + BigM7 * ( 1 - ALFAve'i'[" << v2Aux << "][" << e2 << "][" << j << "])";
+										cout << " + BigM7 * BETAProd-veii'[" << p << "][" << e1 << "][" << i << "][" << e2 << "][" << j << "]";
 										cout << " + TPvei[" << v1Aux << "][" << e1 << "][" << i << "] >=";
 										cout << " TPvei'[" << v2Aux << "][" << e2 << "][" << j << "] + CARRp[" << p << "]" << endl;
 									}
@@ -1521,7 +1521,7 @@ void ClasseModelo::Restricao_PrecedenciaTPvei( TipoAlfa Alfa,TipoBeta BetaProduc
 									expr2 += BigMauternativo  * ( 1 - Alfa[v1Aux][e1][i]) + BigMauternativo  * ( 1 - Alfa[v2Aux][e2][j]) + BigMauternativo  * BetaProducao[p][e1][i][e2][j]  + TPvei[v1Aux][e1][i] - TPvei[v2Aux][e2][j] - CARRp[p];
 									Restricao12[NumAux] = expr2 >= 0;
 
-									sprintf(varName,"Rest12_PrecTPvi_p%dv%dv'%de%di%de'%di'%d",p, v1Aux,v2Aux, e1, i,e2, j);
+									sprintf(varName,"Rest12_PrecTPvi_p%dv%dv'%de%di%de'%di'%d", p, v1Aux, v2Aux, e1, i, e2, j);
 									Restricao12[NumAux].setName(varName);
 
 									model.add(Restricao12[NumAux]);
@@ -1572,7 +1572,7 @@ void ClasseModelo::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa, TipoTvei Tvei
 				for (int i = 0; i < TCDE[e]; i++) {
 					if ( EscreveRestricao == 1){
 						cout << " Tvi[" << vAux << "][" << e << "][" << i << "] - TDESCvi[" << vAux << "][" << e << "][" << i << "] ";
-						cout << " -  BigM * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] ) <= " << TVC << endl;
+						cout << " -  BigM8 * ( 1 - ALFAvei[" << vAux << "][" << e << "][" << i << "] ) <= " << TVC << endl;
 					}
 					BigMauternativo = TmaxE[e]-  TminP[p] ;				// M10
 					// declara expressão
@@ -1596,6 +1596,8 @@ void ClasseModelo::Restricao_TempoDeVidaDoConcreto( TipoAlfa Alfa, TipoTvei Tvei
 	}
 
 }
+
+
 	// restrição 14 e 15
 void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAlfa Alfa, IloModel& model, int EscreveRestricao){
 	IloRangeArray Restricao14;
@@ -1630,7 +1632,7 @@ void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAlfa Alf
 				expr1 += Tvei[v][e1][i] - TminE[e1]*Alfa[v][e1][i] ;
 				Restricao14[NumAux] = expr1 >= 0;
 
-				sprintf(varName,"Rest14_TviMin_v%de%di%d", v, e1, i);
+				sprintf(varName,"Rest14_TveiMin_v%de%di%d", v, e1, i);
 				Restricao14[NumAux].setName(varName);
 
 				model.add(Restricao14[NumAux]);
@@ -1642,7 +1644,7 @@ void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAlfa Alf
 				expr2 += Tvei[v][e1][i] - TmaxE[e1]*Alfa[v][e1][i] ;
 				Restricao15[NumAux] = expr2 <= 0;
 
-				sprintf(varName,"Rest15_TviMax_v%de%di%d", v, e1, i);
+				sprintf(varName,"Rest15_TveiMax_v%de%di%d", v, e1, i);
 				Restricao15[NumAux].setName(varName);
 
 				model.add(Restricao15[NumAux]);
@@ -1656,6 +1658,7 @@ void ClasseModelo::Restricao_LimiteDeTempoNaEntrega( TipoTvei Tvei, TipoAlfa Alf
 		}
 	}
 }
+
 	// restrição 16 e 17
 void ClasseModelo::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei, TipoAlfa Alfa, IloModel& model, int EscreveRestricao ){
 	int vAux;
@@ -1695,7 +1698,7 @@ void ClasseModelo::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei, TipoAlfa Alf
 					expr1 += TPvei[vAux][e1][i] - TminP[p] *Alfa[vAux][e1][i] ;
 					Restricao16[NumAux] = expr1 >= 0;
 
-					sprintf(varName,"Rest16_TPviMin_p%dv%de%di%d",p, vAux, e1, i);
+					sprintf(varName,"Rest16_TPviMin_p%dv%de%di%d", p, vAux, e1, i);
 					Restricao16[NumAux].setName(varName);
 
 					model.add(Restricao16[NumAux]);
@@ -1707,7 +1710,7 @@ void ClasseModelo::Restricao_LimiteDeTempoNaPlanta( TipoTvei TPvei, TipoAlfa Alf
 					expr2 += TPvei[vAux][e1][i] - TmaxP[p] *Alfa[vAux][e1][i] ;
 					Restricao17[NumAux] = expr2 <= 0;
 
-					sprintf(varName,"Rest17_TPviMax_p%dv%de%di%d",p, vAux, e1, i);
+					sprintf(varName,"Rest17_TPviMax_p%dv%de%di%d", p, vAux, e1, i);
 					Restricao17[NumAux].setName(varName);
 
 					model.add(Restricao17[NumAux]);
@@ -1817,6 +1820,7 @@ void ClasseModelo::EscreveVariaveisAlfaDoModeloAposResolucao(int EscreveArquivoC
 		}
 	}
 }
+
 void ClasseModelo::EscreveVariaveisBetaDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoBeta Beta ){
 	for (int v = 0; v< NV; v++) {
 		if( EscreveNaTelaResultados == 1){
@@ -1855,6 +1859,7 @@ void ClasseModelo::EscreveVariaveisBetaDoModeloAposResolucao(int EscreveArquivoC
 		}
 	}
 }
+
 void ClasseModelo::EscreveVariaveisBetaProducaoDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex,  TipoBeta BetaProducao ){
 	for (int p = 0; p < NP; p++) {
 		if( EscreveNaTelaResultados == 1){
@@ -1893,6 +1898,7 @@ void ClasseModelo::EscreveVariaveisBetaProducaoDoModeloAposResolucao(int Escreve
 		}
 	}
 }
+
 void ClasseModelo::EscreveVariaveisTveiDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoTvei Tvei){
 	for (int v = 0; v < NV; v++) {
 		if( EscreveArquivoComRespostas == 1){
@@ -1919,6 +1925,7 @@ void ClasseModelo::EscreveVariaveisTveiDoModeloAposResolucao(int EscreveArquivoC
 		}
 	}
 }
+
 void ClasseModelo::EscreveVariaveisTPveiDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, TipoTPvei TPvei ){
 	int vAux;
 	vAux = 0;
@@ -1950,6 +1957,7 @@ void ClasseModelo::EscreveVariaveisTPveiDoModeloAposResolucao(int EscreveArquivo
 		}
 	}
 }
+
 void ClasseModelo::EscreveVariaveisZeDoModeloAposResolucao(int EscreveArquivoComRespostas, int EscreveNaTelaResultados,ofstream& logfile2, IloCplex cplex, IloFloatVarArray Ze ){
 	for (int e = 0; e < NE; e++) {
 		for( int i = 0; i < TCDE[e]; i++){
@@ -1970,7 +1978,6 @@ void ClasseModelo::EscreveVariaveisZeDoModeloAposResolucao(int EscreveArquivoCom
 	}
 
 }
-
 
 // Calcula Função Objetivo Real
 void ClasseModelo::CalculaFuncaoObjetivo(  IloCplex cplex, IloFloatVarArray Ze,   double& ValorRealFuncaoObjetivo){
@@ -2034,6 +2041,7 @@ void ClasseModelo::EscreveItinerarioVeiculos( int EscreveNaTelaResultados,int Es
 		}
 	}
 }
+
 void ClasseModelo::EscreveEntregasNosClientes(int EscreveNaTelaResultados,int EscreveArquivoComRespostas, ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa, TipoTvei Tvei){
 	int vAux;
 	if( EscreveNaTelaResultados == 1){
@@ -2090,6 +2098,7 @@ void ClasseModelo::EscreveEntregasNosClientes(int EscreveNaTelaResultados,int Es
 		}
 	}
 }
+
 void ClasseModelo::EscreveUtilizacaoVeiculos(int EscreveNaTelaResultados,int EscreveArquivoComRespostas, ofstream& logfile2, IloCplex cplex, TipoAlfa Alfa, TipoTvei Tvei){
 	int vAux;
 	int UsouCaminhao;
@@ -2332,8 +2341,6 @@ int ClasseModelo::Cplex(string Nome, int  TempoExecucao, int &status, double &pr
 		TPvei.clear();
 		TPvei.clear();
 		EscreveRestricao.clear();
-
-
 
 		return (0);
 	}else{
